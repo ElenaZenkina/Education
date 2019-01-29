@@ -1,0 +1,6 @@
+*.cs
+*.dll
+*.csprojResolveAssemblyReference.cache
+*.csproj.FileListAbsolute.txt
+*.cache
+*.pdb

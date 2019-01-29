@@ -1,0 +1,5 @@
+*.cs
+*.pdb
+*.exe
+*.csproj.FileListAbsolute.txt
+*.cache
