@@ -68,11 +68,9 @@ namespace Task2
                 externalRing = innRing;
             }
 
-            if (innerRing.center.X != externalRing.center.X || innerRing.center.Y != externalRing.center.Y)
-            {
-                innerRing.center.X = externalRing.center.X;
-                innerRing.center.Y = externalRing.center.Y;
-            }
+            center.X = innerRing.center.X;
+            center.Y = innerRing.center.Y;
+
         }
 
     }
