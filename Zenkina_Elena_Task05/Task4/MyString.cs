@@ -14,13 +14,33 @@ namespace Task4
             this.oneString = oneString;
         }
 
+
         public static MyString operator +(MyString firstString, MyString secondString)
         {
+            if (firstString is null)
+            {
+                return secondString;
+            }
+            if (secondString is null)
+            {
+                return firstString;
+            }
             return new MyString(firstString.oneString + secondString.oneString);
         }
 
+
         public static MyString operator -(MyString firstString, MyString secondString)
         {
+            if (firstString is null || String.IsNullOrEmpty(firstString.oneString))
+            {
+                return null;
+            }
+
+            if (secondString is null || String.IsNullOrEmpty(secondString.oneString))
+            {
+                return firstString;
+            }
+
             int n = firstString.oneString.IndexOf(secondString.oneString);
             if (n != -1)
             {
@@ -32,13 +52,23 @@ namespace Task4
             }
         }
 
+
         public static bool operator ==(MyString firstString, MyString secondString)
         {
+            if (firstString is null && secondString is null) return true;
+
+            if (firstString is null || secondString is null) return false;
+
             return (firstString.oneString == secondString.oneString);
         }
 
+
         public static bool operator !=(MyString firstString, MyString secondString)
         {
+            if (firstString is null && secondString is null) return false;
+
+            if (firstString is null || secondString is null) return true;
+
             return (firstString.oneString != secondString.oneString);
         }
 
@@ -46,5 +76,6 @@ namespace Task4
         {
             return oneString;
         }
+
     }
 }

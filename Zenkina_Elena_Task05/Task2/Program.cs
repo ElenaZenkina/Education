@@ -16,7 +16,7 @@ namespace Task2
             round.center = new Coordinate(10, 20);
             round.Radius = MyLibrary.InputConsole.InputDouble("Введите радиус окружности (вещественное число): ");
 
-            if (round.Radius != 0)
+            if (round.Radius <= 0)
             {
                 Console.WriteLine($"Длина окружности: {round.Circumference}");
                 Console.WriteLine($"Площадь круга: {round.Square}");

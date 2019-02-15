@@ -17,17 +17,17 @@ namespace Task4
             var myString3 = new MyString("Пушкин");
 
             var concate2String = myString1 + myString3;
-            Console.WriteLine($"Конкатенация двух строк: {concate2String.ToString()}");
+            Console.WriteLine($"Конкатенация двух строк: {concate2String}");
 
             var concate3String = myString1 + myString2 + myString3;
-            Console.WriteLine($"Конкатенация трех строк: {concate3String.ToString()}");
+            Console.WriteLine($"Конкатенация трех строк: {concate3String}");
 
             var removeSubString = concate2String - myString3;
-            Console.WriteLine($"Удаление подстроки: {removeSubString.ToString()}");
+            Console.WriteLine($"Удаление подстроки: {removeSubString}");
 
-            Console.WriteLine($"Сравнение строк {removeSubString.ToString()} и {myString1.ToString()}: {removeSubString == myString1}");
+            Console.WriteLine($"Сравнение строк {removeSubString} и {myString1}: {removeSubString == myString1}");
 
-            Console.WriteLine($"Сравнение строк {myString3.ToString()} и {myString1.ToString()}: {myString3 == myString1}");
+            Console.WriteLine($"Сравнение строк {myString3} и {myString1}: {myString3 == myString1}");
 
             Console.WriteLine("Нажмите Enter для выхода из программы.");
             Console.ReadLine();

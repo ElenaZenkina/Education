@@ -8,8 +8,8 @@ namespace Task1
 {
     class Employee : User
     {
-        private string position;
-        private int experience;
+        private string position = "инженер";
+        private int experience = 0;
 
         /// <summary>
         /// Должность
@@ -19,7 +19,7 @@ namespace Task1
             get { return position; }
             set
             {
-                if (NamesIsCorrect(value))
+                if (PositionIsCorrect(value))
                 {
                     position = value;
                 }
@@ -41,7 +41,12 @@ namespace Task1
             }
         }
 
-        public Employee()
+        private bool PositionIsCorrect(string position)
+        {
+            return NamesIsCorrect(position);
+        }
+
+            public Employee()
         {
         }
 

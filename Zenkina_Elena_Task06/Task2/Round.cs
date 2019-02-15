@@ -8,7 +8,7 @@ namespace Task2
 {
     public class Round
     {
-        private double radius;
+        private double radius = 1.0;
 
         /// <summary>
         /// Координаты центра окружности.
@@ -48,6 +48,12 @@ namespace Task2
 
         public Round()
         {
+        }
+
+        public Round(Coordinate center, double radius)
+        {
+            this.center = center;
+            this.radius = radius;
         }
     }
 

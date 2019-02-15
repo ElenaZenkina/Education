@@ -9,11 +9,11 @@ namespace Task1
 {
     public class User
     {
-        private string name;
-        private string middleName;
-        private string lastName;
-        private DateTime birthday;
-        private int age;
+        private string name = "Иван";
+        private string middleName = "Иванович";
+        private string lastName = "Иванов";
+        private DateTime birthday = DateTime.Now.AddYears(-1);
+        private int age = 1;
 
         /// <summary>
         /// Имя

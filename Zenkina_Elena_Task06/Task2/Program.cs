@@ -12,22 +12,16 @@ namespace Task2
         {
             Console.WriteLine("Создание класса Ring:");
 
-            var ring = new Ring();
-            ring.center = new Coordinate(10, 20);
+            var externalRadius = MyLibrary.InputConsole.InputDouble("Введите внешний радиус кольца (вещественное число): ");
+            var innerRadius = MyLibrary.InputConsole.InputDouble("Введите внутренний радиус кольца (вещественное число): ");
 
-            ring.Radius = MyLibrary.InputConsole.InputDouble("Введите внешний радиус кольца (вещественное число): ");
-            ring.InRadius = MyLibrary.InputConsole.InputDouble("Введите внутренний радиус кольца (вещественное число): ");
+            var center = new Coordinate(10, 20);
+            var innerRound = new Round(center, innerRadius);
+            var externalRound = new Round(center, externalRadius);
+            var ring = new Ring(externalRound, innerRound);
 
-            if (ring.Radius == 0 || ring.InRadius == 0)
-            {
-                var radius = ring.Radius == 0 ? "Внешний" : "Внутренний";
-                Console.WriteLine($"{radius} радиус введен некорректно.");
-            }
-            else
-            {
-                Console.WriteLine($"Длины окружностей кольца: {ring.RingCircumference}");
-                Console.WriteLine($"Площадь кольца: {ring.RingSquare}");
-            }
+            Console.WriteLine($"Длины окружностей кольца: {ring.RingCircumference}");
+            Console.WriteLine($"Площадь кольца: {ring.RingSquare}");
 
             Console.WriteLine("Нажмите Enter для выхода из программы.");
             Console.ReadLine();

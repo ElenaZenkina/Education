@@ -23,7 +23,7 @@ namespace Task3
                 if (i == 3) { triangle.C = side; }
             }
             
-            if (triangle.A == 0 || triangle.B == 0 || triangle.C == 0)
+            if (!triangle.IsSideCorrect())
             {
                 Console.WriteLine("Одна из сторон треугольника введена некорректно. Расчет невозможен.");
             }

@@ -8,16 +8,16 @@ namespace Task3
 {
     class Triangle
     {
-        private int a;
-        private int b;
-        private int c;
+        private int a = 1;
+        private int b = 1;
+        private int c = 1;
 
         public int A
         {
             get { return a; }
             set
             {
-                if (value > 0 && SideIsCorrect(value, b, c))
+                if (value > 0)
                 {
                     a = value;
                 }
@@ -29,7 +29,7 @@ namespace Task3
             get { return b; }
             set
             {
-                if (value > 0 && SideIsCorrect(value, a, c))
+                if (value > 0)
                 {
                     b = value;
                 }
@@ -41,18 +41,25 @@ namespace Task3
             get { return c; }
             set
             {
-                if (value > 0 && SideIsCorrect(value, a, b))
+                if (value > 0)
                 {
                     c = value;
                 }
             }
         }
 
-        private bool SideIsCorrect(int x, int a, int b)
+        private bool IsSideCorrect(int a, int b, int c)
         {
+            if (a <= 0 || b <= 0 || c <= 0) { return false; }
             // Любая сторона треугольника меньше суммы двух других сторон и больше их разности.
-            if (a == 0 || b == 0) return true;
-            return (x < a + b) && (x > Math.Abs(a - b));
+            return (c < a + b) && (c > Math.Abs(a - b)) &&
+                   (a < c + b) && (a > Math.Abs(c - b)) &&
+                   (b < a + c) && (b > Math.Abs(a - c));
+        }
+
+        public bool IsSideCorrect()
+        {
+            return IsSideCorrect(this.a, this.b, this.c);
         }
 
         public Triangle()
@@ -60,9 +67,12 @@ namespace Task3
 
         public Triangle(int a, int b, int c)
         {
-            A = a;
-            B = b;
-            C = c;
+            if (IsSideCorrect(a, b, c))
+            {
+                A = a;
+                B = b;
+                C = c;
+            }
         }
 
         public int Perimeter()

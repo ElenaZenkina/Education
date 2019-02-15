@@ -8,7 +8,7 @@ namespace Task2
 {
     public class Round
     {
-        private double radius;
+        private double radius = 1.0;
 
         /// <summary>
         /// Координаты центра окружности.

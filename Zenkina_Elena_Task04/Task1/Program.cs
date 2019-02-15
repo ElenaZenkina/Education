@@ -32,16 +32,16 @@ namespace Task1
             // которые НЕ являются символами пунктуации, но и не являются словами.
             string[] words = inputString.Split(new char[] { ' ', '.', ',', ';', ':', '?', '!', '-', '(', ')', '\'', '"' }, StringSplitOptions.RemoveEmptyEntries);
 
-            var N = 0;
+            var i = 0;
             var sum = 0;
 
             foreach (var word in words)
             {
-                N++;
+                i++;
                 sum += word.Length;
             }
             // Здесь отбрасывается остаток от деления, но можно переделать на округление.
-            return N == 0 ? 0 : sum / N;
+            return i == 0 ? 0 : sum / i;
         }
     }
 }

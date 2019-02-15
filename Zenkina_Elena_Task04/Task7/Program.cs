@@ -14,8 +14,8 @@ namespace Task7
             Console.WriteLine("Программа, которая определяет, сколько раз в тексте встречается время.");
 
             Console.Write("Введите текст: ");
-            int N = CountTime(Console.ReadLine());
-            Console.WriteLine($"Время в тексте присутствует {N} раз(а).");
+            int number = CountTime(Console.ReadLine());
+            Console.WriteLine($"Время в тексте присутствует {number} раз(а).");
 
             Console.WriteLine("Работа программы завершена, нажмите Enter.");
             Console.ReadLine();
