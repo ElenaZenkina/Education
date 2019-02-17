@@ -9,11 +9,11 @@ namespace Task1
 {
     public class User
     {
-        private string name = "Иван";
-        private string middleName = "Иванович";
-        private string lastName = "Иванов";
-        private DateTime birthday = DateTime.Now.AddYears(-1);
-        private int age = 1;
+        private string name;
+        private string middleName;
+        private string lastName;
+        private DateTime birthday;
+        private int age;
 
         /// <summary>
         /// Имя
@@ -26,6 +26,10 @@ namespace Task1
                 if (NamesIsCorrect(value))
                 {
                     name = value;
+                }
+                else
+                {
+                    throw new ArgumentException("Name", $"Имя {value} задано некорректно.");
                 }
             }
         }
@@ -42,6 +46,10 @@ namespace Task1
                 {
                     middleName = value;
                 }
+                else
+                {
+                    throw new ArgumentException("MiddleName", $"Имя {value} задано некорректно.");
+                }
             }
         }
 
@@ -56,6 +64,10 @@ namespace Task1
                 if (NamesIsCorrect(value))
                 {
                     lastName = value;
+                }
+                else
+                {
+                    throw new ArgumentException("LastName", $"Имя {value} задано некорректно.");
                 }
             }
         }
@@ -72,6 +84,10 @@ namespace Task1
                 {
                     birthday = value;
                     age = (DateTime.MinValue + DateTime.Now.Subtract(birthday)).Year - 1;
+                }
+                else
+                {
+                    throw new ArgumentException("Birthday", $"Дата {value} задана некорректно.");
                 }
             }
         }
@@ -92,10 +108,6 @@ namespace Task1
             Regex regex = new Regex(@"^[a-zA-Zа-яА-Я-]*$", RegexOptions.Compiled);
 
             return (regex.IsMatch(name)) && (name.Trim().Length > 0);
-        }
-
-        public User()
-        {
         }
 
         public User(string name, string middleName, string lastName, DateTime birthday)

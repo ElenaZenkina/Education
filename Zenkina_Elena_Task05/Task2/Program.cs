@@ -12,18 +12,18 @@ namespace Task2
         {
             Console.WriteLine("Создание класса Round:");
 
-            var round = new Round();
-            round.center = new Coordinate(10, 20);
-            round.Radius = MyLibrary.InputConsole.InputDouble("Введите радиус окружности (вещественное число): ");
+            var center = new Coordinate(10, 20);
+            double radius = MyLibrary.InputConsole.InputDouble("Введите радиус окружности (вещественное число): ");
 
-            if (round.Radius <= 0)
+            try
             {
+                var round = new Round(center, radius);
                 Console.WriteLine($"Длина окружности: {round.Circumference}");
                 Console.WriteLine($"Площадь круга: {round.Square}");
             }
-            else
+            catch (ArgumentException ex)
             {
-                Console.WriteLine("Радиус введен некорректно.");
+                Console.WriteLine(ex.Message);
             }
 
             Console.WriteLine("Нажмите Enter для выхода из программы.");

@@ -14,15 +14,20 @@ namespace Task1
 
             var users = new User[3];
 
-            User user = new User();
-            user.Name = "Чингиз";
-            user.MiddleName = "Торекулович";
-            user.LastName = "Айтматов";
-            user.Birthday = new DateTime(1928, 12, 12);
+            try
+            {
+                users[0] = new User("Чингиз", "Торекулович", "Айтматов", new DateTime(1928, 12, 12));
+                users[1] = new User("Юрий", "Алексеевич", "Гагарин", new DateTime(1934, 3, 9));
+                users[2] = new User("Владимир", "Семенович", "Высоцкий", new DateTime(1938, 1, 25));
 
-            users[0] = user;
-            users[1] = new User("Юрий", "Алексеевич", "Гагарин", new DateTime(1934, 3, 9));
-            users[2] = new User { Name = "Владимир", MiddleName = "Семенович", LastName = "Высоцкий", Birthday = new DateTime(1938, 1, 25) };
+                // Здесь неправильна задана фамилия
+                users[0] = new User("Чингиз", "Торекулович", "Айтматов!", new DateTime(1928, 12, 12));
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
 
             foreach (var _user in users)
             {

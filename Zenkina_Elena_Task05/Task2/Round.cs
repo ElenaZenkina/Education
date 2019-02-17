@@ -8,7 +8,7 @@ namespace Task2
 {
     public class Round
     {
-        private double radius = 1.0;
+        private double radius;
 
         /// <summary>
         /// Координаты центра окружности.
@@ -26,6 +26,10 @@ namespace Task2
                 if (value > 0)
                 {
                     radius = value;
+                }
+                else
+                {
+                    throw new ArgumentException("Radius", $"Радиус {value} не может быть отрицательным числом.");
                 }
             }
         }
@@ -46,8 +50,10 @@ namespace Task2
             get { return Math.PI * radius * radius; }
         }
 
-        public Round()
+        public Round(Coordinate center, double radius)
         {
+            this.center = center;
+            Radius = radius;
         }
     }
 

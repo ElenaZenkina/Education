@@ -8,9 +8,9 @@ namespace Task3
 {
     class Triangle
     {
-        private int a = 1;
-        private int b = 1;
-        private int c = 1;
+        private int a;
+        private int b;
+        private int c;
 
         public int A
         {
@@ -20,6 +20,10 @@ namespace Task3
                 if (value > 0)
                 {
                     a = value;
+                }
+                else
+                {
+                    throw new ArgumentException("", $"Сторона треугольника {value} не может быть отрицательным числом.");
                 }
             }
         }
@@ -33,6 +37,10 @@ namespace Task3
                 {
                     b = value;
                 }
+                else
+                {
+                    throw new ArgumentException("", $"Сторона треугольника {value} не может быть отрицательным числом.");
+                }
             }
         }
 
@@ -44,6 +52,10 @@ namespace Task3
                 if (value > 0)
                 {
                     c = value;
+                }
+                else
+                {
+                    throw new ArgumentException("", $"Сторона треугольника {value} не может быть отрицательным числом.");
                 }
             }
         }
@@ -62,9 +74,6 @@ namespace Task3
             return IsSideCorrect(this.a, this.b, this.c);
         }
 
-        public Triangle()
-        { }
-
         public Triangle(int a, int b, int c)
         {
             if (IsSideCorrect(a, b, c))
@@ -72,6 +81,10 @@ namespace Task3
                 A = a;
                 B = b;
                 C = c;
+            }
+            else
+            {
+                throw new ArgumentException("", $"Треугольник со сторонами {a}, {b} и {c} не существует.");
             }
         }
 
