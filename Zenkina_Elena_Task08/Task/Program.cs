@@ -16,16 +16,16 @@ namespace Task
             var myArray = new DynamicArray<int>(10);
             Output("Конструктор массива с заданной емкостью 10:", myArray);
 
-            myArray[0] = 0;
-            myArray[1] = 1;
-            myArray[2] = 1;
-            myArray[3] = 2;
-            myArray[4] = 3;
-            myArray[5] = 5;
-            myArray[6] = 8;
-            myArray[7] = 13;
-            myArray[8] = 21;
-            myArray[9] = 34;
+            myArray.Add(0);
+            myArray.Add(1);
+            myArray.Add(1);
+            myArray.Add(2);
+            myArray.Add(3);
+            myArray.Add(5);
+            myArray.Add(8);
+            myArray.Add(13);
+            myArray.Add(21);
+            myArray.Add(34);
 
             dynArray = new DynamicArray<int>(myArray);
             Output("Конструктор, который в качестве параметра принимает массив (с числами Фибоначчи):", dynArray);
@@ -34,9 +34,9 @@ namespace Task
             Output("Добавление одного элемента в конец массива:", dynArray);
 
             myArray = new DynamicArray<int>(3);
-            myArray[0] = 89;
-            myArray[1] = 144;
-            myArray[2] = 233;
+            myArray.Add(89);
+            myArray.Add(144);
+            myArray.Add(233);
             dynArray.AddRange(myArray);
             Output("Добавление в конец массива элементов другого массива:", dynArray);
 

@@ -7,28 +7,37 @@ namespace Task
 {
     class DynamicArray<T> where T : new()
     {
-        T[] dynArray;
-        int length;
-        int capacity;
+        private T[] dynArray;
+        /// <summary>
+        /// Длина заполненной части массива.
+        /// </summary>
+        public int Length { get; set; }
+
+        /// <summary>
+        /// Ёмкость массива - количество всех элементов.
+        /// </summary>
+        public int Capacity { get; set; }
+
 
         /// <summary>
         /// Конструктор без параметров создаёт массив емкостью 8 элементов.
         /// </summary>
         public DynamicArray()
         {
-            dynArray = new T[ 8 ];
-            length = 0;
-            capacity = 8;
+            dynArray = new T[8];
+            Length = 0;
+            Capacity = 8;
         }
 
         /// <summary>
         /// Конструктор массива с заданной емкостью.
         /// </summary>
-        public DynamicArray(uint capacity)
+        public DynamicArray(int capacity)
         {
-            dynArray = new T[ capacity ];
-            length = 0;
-            this.capacity = (int)capacity;
+            CorrectCapacity(capacity);
+            dynArray = new T[capacity];
+            Length = 0;
+            Capacity = capacity;
         }
 
         /// <summary>
@@ -36,10 +45,9 @@ namespace Task
         /// </summary>
         public DynamicArray(DynamicArray<T> sourceArray)
         {
-            dynArray = new T[sourceArray.Length];
+            dynArray = new T[sourceArray.Capacity];
             sourceArray.dynArray.CopyTo(dynArray, 0);
-            length = sourceArray.Length;
-            capacity = length;
+            Length = Capacity = sourceArray.Length;
         }
 
         /// <summary>
@@ -49,40 +57,56 @@ namespace Task
         {
             get
             {
-                if (index < 0 || index >= capacity)
-                {
-                    throw new ArgumentOutOfRangeException("Index", $"Индекс {index} не должен выходить за границу массива");
-                }
-                return dynArray [ index ];
+                CorrectIndex(index);
+                return dynArray[index];
             }
             set
             {
-                if (index < 0 || index >= capacity)
-                {
-                    throw new ArgumentOutOfRangeException("Index", $"Индекс {index} не должен выходить за границу массива");
-                }
-                dynArray [ index ] = value;
+                CorrectIndex(index);
+                dynArray[index] = value;
                 // При необходимости увеличиваем длину заполненной части массива
-                length = length <= index ? ++index : length;
+                Length = Length <= index ? ++index : Length;
+            }
+        }
+
+        private void CorrectIndex(int index)
+        {
+            if (index < 0 || index >= Length)
+            {
+                throw new ArgumentOutOfRangeException("Index", $"Индекс {index} не должен выходить за границу массива");
+            }
+        }
+
+        private void CorrectCapacity(int capacity)
+        {
+            if (capacity < 0)
+            {
+                throw new ArgumentOutOfRangeException("Capacity", $"Емкость массива {capacity} не может быть отрицательным числом");
             }
         }
 
         private void Resize(int capacity)
         {
             Array.Resize(ref dynArray, capacity);
-            this.capacity = capacity;
+            Capacity = capacity;
         }
 
+        /// <summary>
+        /// Добавление одного элемента в конец массива.
+        /// </summary>
         public void Add(T item)
         {
-            if (length == capacity)
+            if (Length == Capacity)
             {
-                Resize(capacity == 0 ? 1 : capacity * 2);
+                Resize(Capacity == 0 ? 1 : Capacity * 2);
             }
 
-            dynArray[length++] = item;
+            dynArray[Length++] = item;
         }
 
+        /// <summary>
+        /// Добавление в конец массива содержимого переданного массива.
+        /// </summary>
         public void AddRange(DynamicArray<T> addArray)
         {
             var addArrayLen = addArray.Length;
@@ -92,17 +116,17 @@ namespace Task
                 return;
             }
 
-            if (length + addArrayLen > capacity)
+            if (Length + addArrayLen > Capacity)
             {
-                Resize(length + addArrayLen);
+                Resize(Length + addArrayLen);
             }
 
             for (int i = 0; i < addArrayLen; i++)
             {
-                dynArray[length + i] = addArray[i];
+                dynArray[Length + i] = addArray[i];
             }
 
-            length += addArrayLen;
+            Length += addArrayLen;
         }
 
         /// <summary>
@@ -110,7 +134,7 @@ namespace Task
         /// </summary>
         public bool Remove(T item)
         {
-            if (dynArray == null || length == 0)
+            if (dynArray == null || Length == 0)
             {
                 return false;
             }
@@ -121,48 +145,35 @@ namespace Task
                 return false;
             }
 
-            for (int i = index; i < length - 1; i++)
+            for (int i = index; i < Length - 1; i++)
             {
                 dynArray[i] = dynArray[i + 1];
             }
 
-            dynArray[ --length ] = default(T);
+            Length--;
             return true;
         }
 
         /// <summary>
         /// Добавление элемента в произвольную позицию массива.
         /// </summary>
-        public bool Insert(int index, T item )
+        public bool Insert(int index, T item)
         {
-            if (index < 0 || index >= capacity)
+            CorrectIndex(index);
+            if (Length == Capacity)
             {
-                throw new ArgumentOutOfRangeException("Index", $"Индекс {index} не должен выходить за границу массива");
-            }
-            if (length == capacity)
-            {
-                Resize(capacity == 0 ? 1 : capacity * 2);
+                Resize(Capacity == 0 ? 1 : Capacity * 2);
             }
 
-            for (int i = length; i > index; i--)
+            for (int i = Length; i > index; i--)
             {
                 dynArray[i] = dynArray[i - 1];
             }
             dynArray[index] = item;
 
-            length++;
+            Length++;
             return true;
         }
-
-        /// <summary>
-        /// Получение длины заполненной части массива.
-        /// </summary>
-        public int Length => length;
-
-        /// <summary>
-        /// Получение ёмкости массива - количества всех элементов.
-        /// </summary>
-        public int Capacity => capacity;
 
     }
 }
