@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task1", "Task1\Task1.csproj", "{A50373A3-4C49-4BD3-958C-4CCAAD99A1CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task2", "Task2\Task2.csproj", "{DCCAD00F-80B8-45BD-AC9F-6D6BE5E4A7E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task3", "Task3\Task3.csproj", "{FA215FEC-BA0B-4065-8F7D-87D4959E4251}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A50373A3-4C49-4BD3-958C-4CCAAD99A1CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A50373A3-4C49-4BD3-958C-4CCAAD99A1CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A50373A3-4C49-4BD3-958C-4CCAAD99A1CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A50373A3-4C49-4BD3-958C-4CCAAD99A1CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCCAD00F-80B8-45BD-AC9F-6D6BE5E4A7E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCCAD00F-80B8-45BD-AC9F-6D6BE5E4A7E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCCAD00F-80B8-45BD-AC9F-6D6BE5E4A7E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCCAD00F-80B8-45BD-AC9F-6D6BE5E4A7E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA215FEC-BA0B-4065-8F7D-87D4959E4251}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA215FEC-BA0B-4065-8F7D-87D4959E4251}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA215FEC-BA0B-4065-8F7D-87D4959E4251}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA215FEC-BA0B-4065-8F7D-87D4959E4251}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
