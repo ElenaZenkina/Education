@@ -11,22 +11,19 @@ namespace Task
         /// <summary>
         /// Длина заполненной части массива.
         /// </summary>
-        public int Length { get; set; }
+        public int Length { get; private set; }
 
         /// <summary>
         /// Ёмкость массива - количество всех элементов.
         /// </summary>
-        public int Capacity { get; set; }
+        public int Capacity => dynArray.Length;
 
 
         /// <summary>
         /// Конструктор без параметров создаёт массив емкостью 8 элементов.
         /// </summary>
-        public DynamicArray()
+        public DynamicArray() : this(8)
         {
-            dynArray = new T[8];
-            Length = 0;
-            Capacity = 8;
         }
 
         /// <summary>
@@ -34,10 +31,9 @@ namespace Task
         /// </summary>
         public DynamicArray(int capacity)
         {
-            CorrectCapacity(capacity);
+            IsCapacityCorrect(capacity);
             dynArray = new T[capacity];
             Length = 0;
-            Capacity = capacity;
         }
 
         /// <summary>
@@ -47,7 +43,7 @@ namespace Task
         {
             dynArray = new T[sourceArray.Capacity];
             sourceArray.dynArray.CopyTo(dynArray, 0);
-            Length = Capacity = sourceArray.Length;
+            Length = sourceArray.Length;
         }
 
         /// <summary>
@@ -57,27 +53,27 @@ namespace Task
         {
             get
             {
-                CorrectIndex(index);
+                IsIndexCorrect(index, Length - 1);
                 return dynArray[index];
             }
             set
             {
-                CorrectIndex(index);
+                IsIndexCorrect(index, Length - 1);
                 dynArray[index] = value;
                 // При необходимости увеличиваем длину заполненной части массива
                 Length = Length <= index ? ++index : Length;
             }
         }
 
-        private void CorrectIndex(int index)
+        private void IsIndexCorrect(int index, int maxValue)
         {
-            if (index < 0 || index >= Length)
+            if (index < 0 || index > maxValue)
             {
                 throw new ArgumentOutOfRangeException("Index", $"Индекс {index} не должен выходить за границу массива");
             }
         }
 
-        private void CorrectCapacity(int capacity)
+        private void IsCapacityCorrect(int capacity)
         {
             if (capacity < 0)
             {
@@ -88,7 +84,6 @@ namespace Task
         private void Resize(int capacity)
         {
             Array.Resize(ref dynArray, capacity);
-            Capacity = capacity;
         }
 
         /// <summary>
@@ -96,12 +91,7 @@ namespace Task
         /// </summary>
         public void Add(T item)
         {
-            if (Length == Capacity)
-            {
-                Resize(Capacity == 0 ? 1 : Capacity * 2);
-            }
-
-            dynArray[Length++] = item;
+            Insert(Length, item);
         }
 
         /// <summary>
@@ -159,7 +149,8 @@ namespace Task
         /// </summary>
         public bool Insert(int index, T item)
         {
-            CorrectIndex(index);
+            // Возможна вставка элемента на позицию Length, это равнозначно добавлению элемента в конец списка.
+            IsIndexCorrect(index, Length);
             if (Length == Capacity)
             {
                 Resize(Capacity == 0 ? 1 : Capacity * 2);
