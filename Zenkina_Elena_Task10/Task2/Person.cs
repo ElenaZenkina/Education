@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Task2
 {
-    class Person
-    {
-        public delegate void EventHello(Person person, ComeTimeEventArgs comeTime);
-        public delegate void EventGoodbye(Person person);
+    public delegate void EventHello(Person person, ComeTimeEventArgs comeTime);
+    public delegate void EventGoodbye(Person person);
 
+    public class Person
+    {
         public event EventHello OnHello;
         public event EventGoodbye OnGoodbye;
 
@@ -21,26 +21,51 @@ namespace Task2
             Name = name;
         }
 
-        public void Hi(/*Person person, */DateTime comeTime)
+        // Факт прихода сотрудника.
+        public void Come(/*Person person, */DateTime comeTime)
         {
-            // Факт прихода сотрудника
-            OnHello?.Invoke(this, new ComeTimeEventArgs (comeTime));
+            Console.WriteLine();
+            Console.WriteLine("[На работу пришел " + Name + ".]");
+            OnHello?.Invoke(this, new ComeTimeEventArgs(comeTime));
         }
 
-        public void Bye(/*Person person*/)
+        public void Hello(Person person, ComeTimeEventArgs comeTime)
         {
-            // Факт ухода сотрудника
+            var salute = String.Empty;
+            if (comeTime.ComeTime.Hour < 12)
+            {
+                salute = "'Доброе утро, ";
+            }
+            else if (comeTime.ComeTime.Hour < 17)
+            {
+                salute = "'Добрый день, ";
+            }
+            else
+            {
+                salute = "'Добрый вечер, ";
+            }
+
+            Console.WriteLine(salute + person.Name + "!', - сказал " + Name + ".");
+        }
+
+        // Факт ухода сотрудника.
+        public void Exit()
+        {
+            Console.WriteLine();
+            Console.WriteLine("[" + Name + " ушел домой.]");
             OnGoodbye?.Invoke(this);
         }
-    }
 
-    public class ComeTimeEventArgs : EventArgs
-    {
-        public readonly DateTime ComeTime;
-
-        public ComeTimeEventArgs(DateTime comeTime)
+        public void Bye(Person person)
         {
-            ComeTime = comeTime;
+            Console.WriteLine("'До свидания, " + person.Name + "!', - сказал " + Name + ".");
+        }
+
+        public void Unsubscribe()
+        {
+            this.OnHello = null;
+            this.OnGoodbye = null;
         }
     }
+
 }

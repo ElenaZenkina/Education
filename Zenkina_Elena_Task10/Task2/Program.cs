@@ -10,97 +10,38 @@ namespace Task2
     {
         static void Main(string[] args)
         {
-            string[] employees = {"Джон Леннон", "Билл Уаймен", "Хьюго Леви", "Кит Ричардс"};
+            string[] employees = {"Джон", "Билл", "Хьюго", "Кит"};
 
-            var office = new SmallOffice();
+            var office = new Office();
 
+            // Все сотрудники по очереди приходят в офис.
             foreach (var person in employees)
             {
                 office.ComeEmployee(new Person(person));
             }
 
-            office.ExitEmployee();
+            // Домой уходит Билл.
+            RemoveEmployee(office, new Person(employees[1]));
+
+            // Билл опять приходит на работу.
+            office.ComeEmployee(new Person(employees[1]));
+
+            // А теперь все по очереди уходят домой.
+            for (int i = 0; i < employees.Length; i++)
+            {
+                RemoveEmployee(office, new Person(employees[i]));
+            }
 
             Console.ReadKey();
         }
+
+        private static void RemoveEmployee(Office office, Person person)
+        {
+            if (!office.ExitOneEmployee(person))
+            {
+                Console.WriteLine($"Сотрудника по имени {person.Name} нет в офисе.");
+            }
+        }
     }
 
-    class SmallOffice
-    {
-        delegate void Welcomes(string welcome);
-        private Welcomes welcomes;
-        // Индекс сотрудника, который приветствует/прощается в групповом делегате
-        private int personIndex = 0;
-
-        private List<Person> persons;
-
-        public SmallOffice()
-        {
-            persons = new List<Person>();
-        }
-
-        /// <summary>
-        /// В офис пришел один сотрудник.
-        /// </summary>
-        public void ComeEmployee(Person person)
-        {
-            person.OnHello += Hello;
-            person.Hi(DateTime.Now);
-            persons.Add(person);
-        }
-
-        /// <summary>
-        /// Все сотрудники, начиная с пришедшего первым, уходят домой.
-        /// </summary>
-        public void ExitEmployee()
-        {
-            while (persons.Count > 0)
-            {
-                var person = persons[0];
-                persons.RemoveAt(0);
-
-                person.OnGoodbye += GoodBye;
-                person.Bye();
-            }
-        }
-
-        private void Hello(Person person, ComeTimeEventArgs comeTime)
-        {
-            Console.WriteLine("[На работу пришел " + person.Name + ".]");
-
-            string salute;
-            if (comeTime.ComeTime.Hour < 12)
-            {
-                salute = "'Доброе утро, " + person.Name + "!', - сказал ";
-            }
-            else if (comeTime.ComeTime.Hour < 17)
-            {
-                salute = "'Добрый день, " + person.Name + "!', - сказал ";
-            }
-            else
-            {
-                salute = "'Добрый вечер, " + person.Name + "!', - сказал ";
-            }
-            personIndex = 0;
-            welcomes?.Invoke(salute);
-            welcomes += Welcome;
-            Console.WriteLine();
-        }
-
-        private void GoodBye(Person person)
-        {
-            Console.WriteLine("[" + person.Name + " ушел домой.]");
-            personIndex = 0;
-            welcomes -= Welcome;
-            welcomes?.Invoke("'До свидания, " + person.Name + "!', - сказал ");
-            Console.WriteLine();
-        }
-
-        private void Welcome(string salute)
-        {
-            Console.WriteLine(salute + persons[personIndex].Name + ".");
-            // При каждом вызове из группового делегата меняется сотрудник, который приветствует/прощается.
-            personIndex++;
-        }
-    }
 }
