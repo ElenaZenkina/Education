@@ -20,7 +20,7 @@ namespace Task2
             const string filter = "*.txt";
 
             var watcher = new Watcher(sourceFolder, filter);
-            watcher.Run();
+            watcher.StartWatcher();
         }
     }
 }
