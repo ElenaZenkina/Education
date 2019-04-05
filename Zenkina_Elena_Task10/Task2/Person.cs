@@ -22,50 +22,41 @@ namespace Task2
         }
 
         // Факт прихода сотрудника.
-        public void Come(/*Person person, */DateTime comeTime)
+        public void Come(DateTime comeTime)
         {
-            Console.WriteLine();
-            Console.WriteLine("[На работу пришел " + Name + ".]");
             OnHello?.Invoke(this, new ComeTimeEventArgs(comeTime));
         }
 
-        public void Hello(Person person, ComeTimeEventArgs comeTime)
+        public void SayHello(Person person, ComeTimeEventArgs comeTime)
         {
             var salute = String.Empty;
             if (comeTime.ComeTime.Hour < 12)
             {
-                salute = "'Доброе утро, ";
+                salute = "Доброе утро";
             }
             else if (comeTime.ComeTime.Hour < 17)
             {
-                salute = "'Добрый день, ";
+                salute = "Добрый день";
             }
             else
             {
-                salute = "'Добрый вечер, ";
+                salute = "Добрый вечер";
             }
 
-            Console.WriteLine(salute + person.Name + "!', - сказал " + Name + ".");
+            Console.WriteLine($"'{salute}, {person.Name}!', - сказал {Name}.");
         }
 
         // Факт ухода сотрудника.
         public void Exit()
         {
-            Console.WriteLine();
-            Console.WriteLine("[" + Name + " ушел домой.]");
             OnGoodbye?.Invoke(this);
         }
 
-        public void Bye(Person person)
+        public void SayGoodbye(Person person)
         {
-            Console.WriteLine("'До свидания, " + person.Name + "!', - сказал " + Name + ".");
+            Console.WriteLine($"'До свидания, {person.Name}!', - сказал {Name}.");
         }
 
-        public void Unsubscribe()
-        {
-            this.OnHello = null;
-            this.OnGoodbye = null;
-        }
     }
 
 }

@@ -6,8 +6,17 @@ using System.Threading.Tasks;
 
 namespace Task2
 {
+    public delegate void Welcome(Person person, ComeTimeEventArgs comeTime);
+    public delegate void Farewell(Person person);
+
     public class Office
     {
+        // Сссылки на методы приветствий
+        private Welcome greetAll;
+
+        // Ссылки на методы прощания
+        private Farewell byeAll;
+
         private List<Person> persons;
 
         public Office()
@@ -15,17 +24,28 @@ namespace Task2
             persons = new List<Person>();
         }
 
+
         /// <summary>
         /// В офис пришел один сотрудник.
         /// </summary>
-        public void ComeEmployee(Person person)
+        public void ComeOneEmployee(Person person)
         {
-            foreach (var employee in persons)
+            Console.WriteLine();
+            Console.WriteLine($"[На работу пришел {person.Name}.]");
+
+            foreach (var p in persons)
             {
-                person.OnHello += employee.Hello;
+                person.OnHello += p.SayHello;
             }
 
-            person.Come(/*person, */DateTime.Now);
+            //person.Come(DateTime.Now);
+            // Приветствие от уже пришедших на работу
+            greetAll?.Invoke(person, new ComeTimeEventArgs(DateTime.Now));
+
+            // Ссылки на методы преветствия и прощания, которые будет говорить вновь пришёдший работник
+            greetAll += person.SayHello;
+            byeAll += person.SayGoodbye;
+
             persons.Add(person);
         }
 
@@ -39,14 +59,15 @@ namespace Task2
 
             if (!persons.Remove(person)) { return false; }
 
+            Console.WriteLine();
+            Console.WriteLine($"[{person.Name} ушел домой.]");
+
             foreach (var employee in persons)
             {
-                person.OnGoodbye += employee.Bye;
+                person.OnGoodbye += employee.SayGoodbye;
             }
 
             person.Exit();
-            // Удалить все подписки
-            person.Unsubscribe();
             return true;
         }
 
