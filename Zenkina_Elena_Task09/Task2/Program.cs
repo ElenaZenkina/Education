@@ -12,7 +12,7 @@ namespace Task2
         {
             // Программа, демонстрирующая класс DynamicArray, который в качестве параметра принимает коллекцию, реализующую интерфейс IEnumerable.
             var list = new List<int>(Enumerable.Range(1, 12));
-            var myArray = new DynamicArray<int>(list);
+            var myArray = new AdvanceDynamicArray<int>(list);
 
             // Благодаря реализации интерфейса IEnumerable, можно пройтись по нашему массиву foreach.
             foreach (var item in myArray)

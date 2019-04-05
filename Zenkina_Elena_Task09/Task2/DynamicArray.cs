@@ -10,11 +10,11 @@ namespace Task2
     /// </summary>
     partial class DynamicArray<T> where T : new()
     {
-        private T[] dynArray;
+        protected T[] dynArray;
         /// <summary>
         /// Длина заполненной части массива.
         /// </summary>
-        public int Length { get; private set; }
+        public int Length { get; protected set; }
 
         /// <summary>
         /// Ёмкость массива - количество всех элементов.

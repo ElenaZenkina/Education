@@ -7,15 +7,12 @@ using System.Threading.Tasks;
 
 namespace Task2
 {
-    /// <summary>
-    /// Сюда добавлены пункты из задания №9
-    /// </summary>
-    partial class DynamicArray<T> : IEnumerable<T> where T : new()
+    class AdvanceDynamicArray<T> : DynamicArray<T>, IEnumerable<T> where T : new()
     {
         /// <summary>
         /// Конструктор, который в качестве параметра принимает коллекцию, реализующую интерфейс IEnumerable.
         /// </summary>
-        public DynamicArray(IEnumerable<T> sourceArray)
+        public AdvanceDynamicArray(IEnumerable<T> sourceArray)
         {
             dynArray = new T[sourceArray.Count()];
             var simpleArray = sourceArray.ToArray();
@@ -25,15 +22,21 @@ namespace Task2
         }
 
         // Реализуем интерфейс IEnumerable
-        /*public IEnumerator<T> GetEnumerator()
+        public IEnumerator<T> GetEnumerator()
         {
-            return dynArray.Cast<T>().GetEnumerator();
+            for (int i = 0; i < dynArray.Length; i++)
+            {
+                yield return dynArray[i];
+            }
+
+            // Или можно записать одной строкой:
+            //return dynArray.Cast<T>().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }*/
+        }
 
     }
 }
