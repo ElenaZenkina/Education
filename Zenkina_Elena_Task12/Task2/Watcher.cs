@@ -6,6 +6,8 @@ using System.IO;
 
 namespace Task2
 {
+    //https://docs.microsoft.com/ru-ru/previous-versions/visualstudio/visual-studio-2008/ch2s8yd7(v=vs.90)
+    //http://www.cyberforum.ru/windows-forms/thread1631380.html
     class Watcher
     {
         private readonly string path;
@@ -17,7 +19,7 @@ namespace Task2
             this.filter = filter;
         }
 
-        public void Run()
+        public void StartWatcher()
         {
             if (String.IsNullOrEmpty(path) || String.IsNullOrEmpty(filter)) { return; }
 
@@ -41,6 +43,22 @@ namespace Task2
                 Console.WriteLine("Нажмите 'q', чтобы выйти из режима наблюдения.");
                 while (Console.Read() != 'q') ;
             }
+        }
+
+        private void CreateBegin()
+        {
+            // Папка для копий файлов
+            string folder = Environment.CurrentDirectory;
+            // Привязаться к текущему рабочему каталогу
+            DirectoryInfo dir1 = new DirectoryInfo(".");
+
+            // Привязаться к несуществующему каталогу, затем создать его
+            DirectoryInfo dir3 = new DirectoryInfo(@"D:\Epam\Net\Testing");
+            dir3.Create();
+            // предпочтительно использовать методы Path для создания адресов
+            string filePath = Path.Combine(dir1.FullName, "test.txt");
+
+
         }
 
         // Define the event handlers.
