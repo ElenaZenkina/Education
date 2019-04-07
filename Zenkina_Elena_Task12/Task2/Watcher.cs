@@ -12,7 +12,7 @@ namespace Task2
     {
         private readonly string path;
         private readonly string filter;
-
+        
         public Watcher(string path, string filter)
         {
             this.path = path;
@@ -22,6 +22,8 @@ namespace Task2
         public void StartWatcher()
         {
             if (String.IsNullOrEmpty(path) || String.IsNullOrEmpty(filter)) { return; }
+
+            if (!Log.IsInitialize()) { return; }
 
             using (FileSystemWatcher watcher = new FileSystemWatcher())
             {
@@ -35,31 +37,26 @@ namespace Task2
 
                 watcher.Changed += OnChanged;
                 watcher.Created += OnChanged;
-                watcher.Deleted += OnChanged;
+                watcher.Deleted += OnDeleted;
                 watcher.Renamed += OnRenamed;
 
                 watcher.EnableRaisingEvents = true;
 
                 Console.WriteLine("Нажмите 'q', чтобы выйти из режима наблюдения.");
-                while (Console.Read() != 'q') ;
+                while (Console.ReadKey().Key != ConsoleKey.Q) ;
             }
         }
 
-        private void CreateBegin()
+        
+
+
+        private static void OnDeleted(object source, FileSystemEventArgs e)
         {
-            // Папка для копий файлов
-            string folder = Environment.CurrentDirectory;
-            // Привязаться к текущему рабочему каталогу
-            DirectoryInfo dir1 = new DirectoryInfo(".");
-
-            // Привязаться к несуществующему каталогу, затем создать его
-            DirectoryInfo dir3 = new DirectoryInfo(@"D:\Epam\Net\Testing");
-            dir3.Create();
-            // предпочтительно использовать методы Path для создания адресов
-            string filePath = Path.Combine(dir1.FullName, "test.txt");
-
-
+            var loging = new Log(DateTime.Now, e.ChangeType, e.FullPath, e.Name);
+            loging.Delete(loging);
+            //Console.WriteLine($"При создании копий файлов возникла ошибка:");
         }
+
 
         // Define the event handlers.
         private static void OnChanged(object source, FileSystemEventArgs e) =>
