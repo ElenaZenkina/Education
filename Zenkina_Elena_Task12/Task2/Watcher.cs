@@ -6,8 +6,6 @@ using System.IO;
 
 namespace Task2
 {
-    //https://docs.microsoft.com/ru-ru/previous-versions/visualstudio/visual-studio-2008/ch2s8yd7(v=vs.90)
-    //http://www.cyberforum.ru/windows-forms/thread1631380.html
     class Watcher
     {
         private readonly string path;
@@ -23,12 +21,11 @@ namespace Task2
         {
             if (String.IsNullOrEmpty(path) || String.IsNullOrEmpty(filter)) { return; }
 
-            if (!Log.IsInitialize()) { return; }
-
             using (FileSystemWatcher watcher = new FileSystemWatcher())
             {
                 watcher.Path = path;
                 watcher.Filter = filter;
+                watcher.IncludeSubdirectories = true;
 
                 watcher.NotifyFilter = NotifyFilters.LastAccess
                                      | NotifyFilters.LastWrite
@@ -36,9 +33,10 @@ namespace Task2
                                      | NotifyFilters.DirectoryName;
 
                 watcher.Changed += OnChanged;
-                watcher.Created += OnChanged;
+                watcher.Created += OnCreated;
                 watcher.Deleted += OnDeleted;
                 watcher.Renamed += OnRenamed;
+                watcher.Error += OnError;
 
                 watcher.EnableRaisingEvents = true;
 
@@ -47,24 +45,42 @@ namespace Task2
             }
         }
 
-        
 
-
-        private static void OnDeleted(object source, FileSystemEventArgs e)
+        private void OnDeleted(object source, FileSystemEventArgs e)
         {
-            var loging = new Log(DateTime.Now, e.ChangeType, e.FullPath, e.Name);
-            loging.Delete(loging);
-            //Console.WriteLine($"При создании копий файлов возникла ошибка:");
+            var logging = new Log(DateTime.Now, e.ChangeType, e.FullPath);
+            logging.Delete();
         }
 
+        private void OnCreated(object source, FileSystemEventArgs e)
+        {
+            var logging = new Log(DateTime.Now, e.ChangeType, e.FullPath);
+            logging.Create();
+        }
 
-        // Define the event handlers.
-        private static void OnChanged(object source, FileSystemEventArgs e) =>
-            // Specify what is done when a file is changed, created, or deleted.
-            Console.WriteLine($"File: {e.FullPath} {e.ChangeType}");
+        private void OnChanged(object source, FileSystemEventArgs e)
+        {
+            try
+            {
+                //(source as FileSystemWatcher).EnableRaisingEvents = false;
+                var logging = new Log(DateTime.Now, e.ChangeType, e.FullPath);
+                logging.Change();
+                
+            }
+            finally
+            {
+                //(source as FileSystemWatcher).EnableRaisingEvents = true;
+            }
+        }
 
-        private static void OnRenamed(object source, RenamedEventArgs e) =>
-            // Specify what is done when a file is renamed.
-            Console.WriteLine($"File: {e.OldFullPath} renamed to {e.FullPath}");
+        private void OnRenamed(object source, RenamedEventArgs e)
+        {
+            var logging = new Log(DateTime.Now, e.ChangeType, e.OldFullPath, e.FullPath);
+            logging.Rename();
+        }
+
+        private void OnError(object source, ErrorEventArgs e) =>
+            Console.WriteLine("Переполнен внутрунний буфер.");
+
     }
 }

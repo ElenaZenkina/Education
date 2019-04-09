@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Task2
 {
-    // Для записи лог-файла можно использовать стандартные функции:
+    // Для записи лог-файла также можно использовать стандартные функции:
     // - серилизацию (для записи/чтения структур),
     // - запись/чтение в xml-файл.
     class Log
@@ -15,8 +15,12 @@ namespace Task2
         public static readonly string LogFileName = Path.Combine(Environment.CurrentDirectory, "log.txt");
         public static readonly string BackupDirectoryName = Path.Combine(Environment.CurrentDirectory, "Temp");
 
-        private string backupFileName;
+        public static readonly string SourceDirectoryName = @"d:\1";
+        public static readonly string FileExtension = "*.txt";
+
         private string sourceFileName;
+        private string oldBackupFileName;
+        private string newBackupFileName;
 
         public DateTime DateTimeBackup { get; set; }
         public WatcherChangeTypes ChangeType { get; set; }
@@ -25,65 +29,73 @@ namespace Task2
             get { return sourceFileName; }
             set
             {
-                string s = Path.GetFileNameWithoutExtension(SourceFileName);
-                s = s + DateTimeBackup.Year + DateTimeBackup.Month + DateTimeBackup.Date +
-                    DateTimeBackup.Hour + DateTimeBackup.Minute + DateTimeBackup.Second + Path.GetExtension(SourceFileName);
-                backupFileName = Path.Combine(BackupDirectoryName, s);
-            }
-        }
-        public string NewBackupFileName
-        {
-            get { return backupFileName; }
-            set
-            {
-                string s = Path.GetFileNameWithoutExtension(SourceFileName);
-                s = s + DateTimeBackup.Year + DateTimeBackup.Month + DateTimeBackup.Date + 
-                    DateTimeBackup.Hour + DateTimeBackup.Minute + DateTimeBackup.Second + Path.GetExtension(SourceFileName);
-                backupFileName = Path.Combine(BackupDirectoryName, s);
-            }
-        }
-        private string OldBackupFileName { get; set; }
+                sourceFileName = value;
+                oldBackupFileName = Path.Combine(BackupDirectoryName, Path.GetFileName(sourceFileName));
 
-        public Log(DateTime dateTimeBackup, WatcherChangeTypes changeType, string sourceFileName, string backupFileName)
+                string newFileName = Path.GetFileNameWithoutExtension(sourceFileName) + "-" +
+                                      DateTimeBackup.Year +
+                                      IntTwoDigit(DateTimeBackup.Month) + IntTwoDigit(DateTimeBackup.Day) +
+                                      IntTwoDigit(DateTimeBackup.Hour) + IntTwoDigit(DateTimeBackup.Minute) +
+                                      IntTwoDigit(DateTimeBackup.Second) +
+                                    Path.GetExtension(sourceFileName);
+
+                newBackupFileName = Path.Combine(BackupDirectoryName, newFileName);
+            }
+        }
+        // Используется только при переименовании файла
+        public string RenameFileName { get; set; }
+
+        // Добавление "0" для формирование двузначного числа.
+        private string IntTwoDigit(int number)
+        {
+            return (number < 10 ? "0" : "") + number;
+        }
+
+        public Log(DateTime dateTimeBackup, WatcherChangeTypes changeType, string sourceFileName)
         {
             DateTimeBackup = dateTimeBackup;
             ChangeType = changeType;
             SourceFileName = sourceFileName;
-            NewBackupFileName = backupFileName;
+        }
+
+        public Log(DateTime dateTimeBackup, WatcherChangeTypes changeType, string sourceFileName, string renameFileName)
+        {
+            DateTimeBackup = dateTimeBackup;
+            ChangeType = changeType;
+            SourceFileName = sourceFileName;
+            RenameFileName = renameFileName;
         }
 
         // Первый запуск программы слежения.
         public static bool IsInitialize()
         {
-            /*
+            if (Directory.Exists(BackupDirectoryName) && (File.Exists(LogFileName))) { return true; }
+
             // Если нет папки с копиями или лог-файла, то программа слежения запускается первый раз.
-            if (!Directory.Exists(BackupDirectoryName) || (!File.Exists(LogFileName)))
-            {
-                if (!IsInitialize()) { return; }
-            }
             try
             {
-                if (Directory.Exists(copiesDirectoryName))
+                if (Directory.Exists(BackupDirectoryName))
                 {
                     Console.WriteLine("Папка для временных файлов уже существует. Вы согласны ее удалить?Y/N");
                     if (Console.ReadKey().Key != ConsoleKey.Y) { return false; }
-                    Directory.Delete(copiesDirectoryName, true);
+                    Directory.Delete(BackupDirectoryName, true);
                 }
-                IsCopyDirectory(path, copiesDirectoryName);
 
-                if (File.Exists(logFileName))
+                if (File.Exists(LogFileName))
                 {
-                    Console.WriteLine($"Лог-файл {logFileName} уже существует. Вы согласны его удалить?Y/N");
+                    Console.WriteLine($"Лог-файл {LogFileName} уже существует. Вы согласны его удалить?Y/N");
                     if (Console.ReadKey().Key != ConsoleKey.Y) { return false; }
-                    File.Delete(logFileName);
+                    File.Delete(LogFileName);
                 }
-                var logFile = File.Create(logFileName);
+
+                IsCopyDirectory(SourceDirectoryName, BackupDirectoryName);
+                using (var logFile = File.Create(LogFileName)) { }
             }
             catch (Exception e)
             {
                 Console.WriteLine($"При запуске программы слежения возникла ошибка: {e.Message}.");
                 return false;
-            }*/
+            }
             return true;
         }
 
@@ -93,7 +105,7 @@ namespace Task2
             try
             {
                 Directory.CreateDirectory(TargetDir);
-                foreach (string fileName in Directory.GetFiles(SourceDir, "*.txt"))
+                foreach (string fileName in Directory.GetFiles(SourceDir, FileExtension))
                 {
                     File.Copy(fileName, Path.Combine(TargetDir, Path.GetFileName(fileName)));
                 }
@@ -112,15 +124,67 @@ namespace Task2
 
 
         // Удаление файла: в backup этот файл переименовываем с учетом времени удаления.
-        public bool Delete(Log log)
+        public bool Delete()
         {
             try
             {
-                File.Move(Path.GetFileName(SourceFileName), )
+                File.Move(oldBackupFileName, newBackupFileName);
                 WriteToLog();
             }
-            catch
-            { }
+            catch (Exception e)
+            {
+                Console.WriteLine($"При создании копии (delete) возникла ошибка {e.Message}");
+                return false;
+            }
+            return true;
+        }
+
+        // Изменение файла: в backup этот файл переименовываем с учетом времени изменения, новый файл копируем в backup.
+        public bool Change()
+        {
+            try
+            {
+                File.Move(oldBackupFileName, newBackupFileName);
+                File.Copy(SourceFileName, oldBackupFileName);
+                WriteToLog();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"При создании копии (change) возникла ошибка {e.Message}");
+                return false;
+            }
+            return true;
+        }
+
+        // Создание файла: новый файл копируем в backup, в лог-файле делается запись о времени.
+        public bool Create()
+        {
+            try
+            {
+                File.Copy(SourceFileName, oldBackupFileName);
+                WriteToLog();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"При создании копии (create) возникла ошибка {e.Message}");
+                return false;
+            }
+            return true;
+        }
+
+        // Переименование файла: переименовываем файл в backup, в лог-файле делается запись о времени.
+        public bool Rename()
+        {
+            try
+            {
+                File.Move(oldBackupFileName, Path.Combine(BackupDirectoryName, Path.GetFileName(RenameFileName)));
+                WriteToLog();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"При создании копии (rename) возникла ошибка {e.Message}");
+                return false;
+            }
             return true;
         }
 
@@ -129,7 +193,8 @@ namespace Task2
             string transaction = DateTimeBackup.ToString() + Environment.NewLine +
                                      ChangeType.ToString() + Environment.NewLine +
                                             SourceFileName + Environment.NewLine +
-                                            NewBackupFileName + Environment.NewLine;
+                                    (ChangeType == WatcherChangeTypes.Renamed ? RenameFileName : newBackupFileName) +
+                                            Environment.NewLine + Environment.NewLine;
             try
             {
                 using (StreamWriter sWriter = new StreamWriter(LogFileName, true))
@@ -146,15 +211,14 @@ namespace Task2
         }
 
 
-        public bool ReadFromLog()
+        private static string ReadFromLog()
         {
+            var contents = String.Empty;
             try
             {
-                var transaction = String.Empty;
-
                 using (StreamReader sReader = File.OpenText(LogFileName))
                 {
-                    transaction = sReader.ReadToEnd();
+                    contents = sReader.ReadToEnd();
                 }
 
                 // разбор
@@ -162,9 +226,26 @@ namespace Task2
             catch (Exception e)
             {
                 Console.WriteLine($"При чтении из лог-файла возникла ошибка {e.Message}");
-                return false;
+                return contents;
             }
-            return true;
+            return contents;
+        }
+
+        public void ReadLog(DateTime dtRollback)
+        {
+            string[] contents = File.ReadAllLines(LogFileName);
+            var toLog = new List<string>();
+            var toParse = new List<string>();
+
+            string[] contents1;
+            for (int i = 0; i < contents.Length; i++)
+            {
+                DateTime dt;
+                if (!DateTime.TryParse(contents[i], out dt) && dt < dtRollback)
+                {
+                    toLog.Add(contents[i]);
+                }
+            }
         }
 
 
