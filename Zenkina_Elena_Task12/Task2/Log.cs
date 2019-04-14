@@ -51,6 +51,9 @@ namespace Task2
             return (number < 10 ? "0" : "") + number;
         }
 
+        public Log()
+        { }
+
         public Log(DateTime dateTimeBackup, WatcherChangeTypes changeType, string sourceFileName)
         {
             DateTimeBackup = dateTimeBackup;
@@ -78,6 +81,7 @@ namespace Task2
                 {
                     Console.WriteLine("Папка для временных файлов уже существует. Вы согласны ее удалить?Y/N");
                     if (Console.ReadKey().Key != ConsoleKey.Y) { return false; }
+                    Console.WriteLine();
                     Directory.Delete(BackupDirectoryName, true);
                 }
 
@@ -85,6 +89,7 @@ namespace Task2
                 {
                     Console.WriteLine($"Лог-файл {LogFileName} уже существует. Вы согласны его удалить?Y/N");
                     if (Console.ReadKey().Key != ConsoleKey.Y) { return false; }
+                    Console.WriteLine();
                     File.Delete(LogFileName);
                 }
 
@@ -231,23 +236,89 @@ namespace Task2
             return contents;
         }
 
-        public void ReadLog(DateTime dtRollback)
+        public static void ReadLog(DateTime dtRollback)
         {
             string[] contents = File.ReadAllLines(LogFileName);
-            var toLog = new List<string>();
-            var toParse = new List<string>();
 
-            string[] contents1;
-            for (int i = 0; i < contents.Length; i++)
+            // Все записи в лог-файле расположены по возрастанию даты. Те, которые меньше указанной, запишем в лог-файл.
+
+            DateTime dt;
+            int i = 0;
+            while (i < contents.Length && (!DateTime.TryParse(contents[i], out dt) || dtRollback > dt))
             {
-                DateTime dt;
-                if (!DateTime.TryParse(contents[i], out dt) && dt < dtRollback)
-                {
-                    toLog.Add(contents[i]);
-                }
+                i++;
+            }
+
+            // В лог-файле остаются те записи, которые не надо откатывать.
+            var remains = new string[i];
+            Array.Copy(contents, remains, i);
+            File.WriteAllLines(/*LogFileName*/@"d:\log.txt", remains);
+            
+            // Массив с логами, которые надо откатить.
+            var rollBackContents = new string[contents.Length - i];
+            Array.Copy(contents, i, rollBackContents, 0, contents.Length - i);
+
+            List<Log> rollBack = Parser(rollBackContents);
+
+            if (rollBack.Count > 0)
+            {
+                // Откат изменений
+                RollBack(rollBack);
             }
         }
 
+        private static List<Log> Parser(string[] contents)
+        {
+            var rollBack = new List<Log>();
+            for (int i = 0; i < contents.Length; i += 5)
+            {
+                var log = new Log();
+
+                DateTime dt;
+                if (DateTime.TryParse(contents[i], out dt)) { log.DateTimeBackup = dt; }
+
+                switch (contents[i + 1].ToLower())
+                {
+                    case "changed":
+                        log.ChangeType = WatcherChangeTypes.Changed;
+                        break;
+                    case "created":
+                        log.ChangeType = WatcherChangeTypes.Created;
+                        break;
+                    case "deleted":
+                        log.ChangeType = WatcherChangeTypes.Deleted;
+                        break;
+                    case "renamed":
+                        log.ChangeType = WatcherChangeTypes.Renamed;
+                        break;
+                }
+
+                log.SourceFileName = contents[i + 2];
+
+                if (log.ChangeType == WatcherChangeTypes.Renamed)
+                {
+                    log.RenameFileName = contents[i + 3];
+                }
+                else
+                {
+                    log.newBackupFileName = contents[i + 3];
+                }
+
+                rollBack.Add(log);
+
+            }
+            return rollBack;
+        }
+
+        private static void RollBack(List<Log> listLog)
+        {
+            for (int i = listLog.Count - 1; i >= 0; i--)
+            {
+                var log = listLog[i];
+                // Можно поменять атрибуты файла
+                //File.SetLastWriteTime(log.SourceFileName, log.DateTimeBackup);
+            }
+        }
 
 
     }

@@ -38,8 +38,8 @@ namespace Task2
             {
                 CultureInfo MyCultureInfo = new CultureInfo("ru-RU");
                 //DateTime rollbackDateTime = DateTime.ParseExact(Console.ReadLine(), "D", MyCultureInfo);
-                DateTime rollbackDateTime = new DateTime(2019, 1, 1, 12, 12, 12);
-                
+                DateTime rollbackDateTime = new DateTime(2019, 4, 7, 12, 12, 12);
+                Log.ReadLog(rollbackDateTime);
             }
 
         }
