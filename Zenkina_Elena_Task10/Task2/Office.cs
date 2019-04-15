@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Task2
 {
-    public delegate void Welcome(Person person, ComeTimeEventArgs comeTime);
-    public delegate void Farewell(Person person);
-
     public class Office
     {
+        public delegate void Welcome(Person person, ComeTimeEventArgs comeTime);
+        public delegate void Farewell(Person person);
+
         // Сссылки на методы приветствий
         private Welcome greetAll;
 
@@ -24,28 +24,14 @@ namespace Task2
             persons = new List<Person>();
         }
 
-
         /// <summary>
         /// В офис пришел один сотрудник.
         /// </summary>
-        public void ComeOneEmployee(Person person)
+        public void ComeOneEmployee(Person person, DateTime time)
         {
-            Console.WriteLine();
-            Console.WriteLine($"[На работу пришел {person.Name}.]");
-
-            foreach (var p in persons)
-            {
-                person.OnHello += p.SayHello;
-            }
-
-            //person.Come(DateTime.Now);
-            // Приветствие от уже пришедших на работу
-            greetAll?.Invoke(person, new ComeTimeEventArgs(DateTime.Now));
-
-            // Ссылки на методы преветствия и прощания, которые будет говорить вновь пришёдший работник
-            greetAll += person.SayHello;
-            byeAll += person.SayGoodbye;
-
+            person.OnHello += OnCameHandler;
+            person.OnGoodbye += OnLeaveHandler;
+            person.Come(time);
             persons.Add(person);
         }
 
@@ -59,16 +45,31 @@ namespace Task2
 
             if (!persons.Remove(person)) { return false; }
 
+            person.Exit();
+            return true;
+        }
+
+
+        private void OnCameHandler(Person person, ComeTimeEventArgs comeTime)
+        {
+            Console.WriteLine();
+            Console.WriteLine($"[На работу пришел {person.Name}.]");
+
+            greetAll?.Invoke(person, comeTime);
+
+            greetAll += person.SayHello;
+            byeAll += person.SayGoodbye;
+        }
+
+        private void OnLeaveHandler(Person person)
+        {
             Console.WriteLine();
             Console.WriteLine($"[{person.Name} ушел домой.]");
 
-            foreach (var employee in persons)
-            {
-                person.OnGoodbye += employee.SayGoodbye;
-            }
+            greetAll -= person.SayHello;
+            byeAll -= person.SayGoodbye;
 
-            person.Exit();
-            return true;
+            byeAll?.Invoke(person);
         }
 
     }

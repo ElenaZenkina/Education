@@ -14,7 +14,7 @@ namespace Task2
         public event EventHello OnHello;
         public event EventGoodbye OnGoodbye;
 
-        public string Name;
+        public string Name { get; set; }
 
         public Person(string name)
         {
