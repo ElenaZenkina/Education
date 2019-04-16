@@ -23,16 +23,26 @@ namespace Task1
             }
 
             int[] intArray = StringToIntArray(contents);
+            if (intArray == null)
+            {
+                Console.WriteLine($"Ошибка при конвертации в число.");
+                Console.ReadKey();
+                return;
+            }
 
             SquareEachToIntArray(intArray, Square);
 
             contents = IntArrayToString(intArray);
 
-            WriteFile(fileName, contents);
-
-            Console.WriteLine("Замена чисел на их квадраты прошла успешно.");
+            if (WriteFile(fileName, contents))
+            {
+                Console.WriteLine("Замена чисел на их квадраты прошла успешно.");
+            }
+            else
+            {
+                Console.WriteLine($"Ошибка при записи в файл {fileName}.");
+            }
             Console.ReadKey();
-
         }
 
         private static int Square(int x) => checked(x * x);
@@ -68,6 +78,7 @@ namespace Task1
             {
                 if (!Int32.TryParse(stringArray[i], out intArray[i]))
                 {
+                    return null;
                 }
             }
             return intArray;
@@ -91,13 +102,20 @@ namespace Task1
         /// </summary>
         private static string ReadFile(string fileName)
         {
+            if (!File.Exists(fileName)) { return String.Empty; }
+
             var content = String.Empty;
-
-            if (!File.Exists(fileName)) { return content; }
-
-            using (StreamReader sReader = File.OpenText(fileName))
+            try
             {
-                content = sReader.ReadToEnd();
+                using (StreamReader sReader = File.OpenText(fileName))
+                {
+                    content = sReader.ReadToEnd();
+                }
+            }
+            catch
+            {
+                Console.WriteLine($"Ошибка при чтении файла {fileName}.");
+                return String.Empty;
             }
             return content;
         }
@@ -105,11 +123,19 @@ namespace Task1
         /// <summary>
         /// Запись строки в файл (файл перезаписывается).
         /// </summary>
-        private static void WriteFile(string fileName, string contents)
+        private static bool WriteFile(string fileName, string contents)
         {
-            using (StreamWriter sWriter = new StreamWriter(fileName, false))
+            try
             {
-                sWriter.Write(contents);
+                using (StreamWriter sWriter = new StreamWriter(fileName, false))
+                {
+                    sWriter.Write(contents);
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
     }

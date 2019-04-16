@@ -48,39 +48,51 @@ namespace Task2
 
         private void OnDeleted(object source, FileSystemEventArgs e)
         {
-            var logging = new Log(DateTime.Now, e.ChangeType, e.FullPath);
-            logging.Delete();
+            var log = new Log(DateTime.Now, e.ChangeType, e.FullPath);
+            if (!DirAndFile.Delete(log))
+            {
+                Console.WriteLine($"Фатальная ошибка. Дальнейшее слежение бессмысленно.");
+            }
         }
 
         private void OnCreated(object source, FileSystemEventArgs e)
         {
-            var logging = new Log(DateTime.Now, e.ChangeType, e.FullPath);
-            logging.Create();
+            var log = new Log(DateTime.Now, e.ChangeType, e.FullPath);
+            if (!DirAndFile.Create(log))
+            {
+                Console.WriteLine($"Фатальная ошибка. Дальнейшее слежение бессмысленно.");
+            }
         }
 
         private void OnChanged(object source, FileSystemEventArgs e)
         {
+            // Обход известной ошибки: при редактировании в Блокноте событие OnChanged срабатывает два раза.
             try
             {
-                //(source as FileSystemWatcher).EnableRaisingEvents = false;
-                var logging = new Log(DateTime.Now, e.ChangeType, e.FullPath);
-                logging.Change();
-                
+                (source as FileSystemWatcher).EnableRaisingEvents = false;
+                var log = new Log(DateTime.Now, e.ChangeType, e.FullPath);
+                if (!DirAndFile.Change(log))
+                {
+                    Console.WriteLine($"Фатальная ошибка. Дальнейшее слежение бессмысленно.");
+                }
             }
             finally
             {
-                //(source as FileSystemWatcher).EnableRaisingEvents = true;
+                (source as FileSystemWatcher).EnableRaisingEvents = true;
             }
         }
 
         private void OnRenamed(object source, RenamedEventArgs e)
         {
-            var logging = new Log(DateTime.Now, e.ChangeType, e.OldFullPath, e.FullPath);
-            logging.Rename();
+            var log = new Log(DateTime.Now, e.ChangeType, e.OldFullPath, e.FullPath);
+            if (!DirAndFile.Rename(log))
+            {
+                Console.WriteLine($"Фатальная ошибка. Дальнейшее слежение бессмысленно.");
+            }
         }
 
         private void OnError(object source, ErrorEventArgs e) =>
-            Console.WriteLine("Переполнен внутрунний буфер.");
+            Console.WriteLine("Переполнен внутренний буфер.");
 
     }
 }
