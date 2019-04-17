@@ -168,6 +168,7 @@
             this.cbxAddReward.Location = new System.Drawing.Point(121, 297);
             this.cbxAddReward.Name = "cbxAddReward";
             this.cbxAddReward.Size = new System.Drawing.Size(128, 21);
+            this.cbxAddReward.Sorted = true;
             this.cbxAddReward.TabIndex = 15;
             // 
             // UserForm

@@ -107,6 +107,7 @@
             this.Controls.Add(this.lblDescription);
             this.Controls.Add(this.lblTitle);
             this.Name = "RewardForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "RewardForm";
             this.Load += new System.EventHandler(this.RewardForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.ctlErrorProvider)).EndInit();

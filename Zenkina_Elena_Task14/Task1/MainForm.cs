@@ -13,7 +13,7 @@ namespace Task1
     public partial class MainForm : Form
     {
         enum SortOrder { Asceding, Desceding };
-        SortOrder[] userSortOrder = new SortOrder[5];
+        SortOrder[] userSortOrder = new SortOrder[6];
         SortOrder[] rewardSortOrder = new SortOrder[3];
 
         private BindingList<User> userList = new BindingList<User>();
@@ -109,6 +109,18 @@ namespace Task1
                             userSortOrder[4] = SortOrder.Asceding;
                         }
                         break;
+                    case 5:
+                        if (userSortOrder[5] == SortOrder.Asceding)
+                        {
+                            userList = new BindingList<User>(userList.OrderByDescending(u => u.ListRewardsToString).ToList());
+                            userSortOrder[5] = SortOrder.Desceding;
+                        }
+                        else
+                        {
+                            userList = new BindingList<User>(userList.OrderBy(u => u.ListRewardsToString).ToList());
+                            userSortOrder[5] = SortOrder.Asceding;
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -198,7 +210,7 @@ namespace Task1
             var userForm = new UserForm();
             userForm.createNewUser = true;
             userForm.listAllRewards = rewardList;
-            userForm.maxID = userList.Max(u => u.ID);
+            userForm.maxID = userList.Count == 0 ? 0 : userList.Max(u => u.ID);
             if (userForm.ShowDialog() == DialogResult.OK)
             {
                 userList.Add(userForm.user);
@@ -210,26 +222,43 @@ namespace Task1
             var userForm = new UserForm();
             userForm.createNewUser = false;
             userForm.listAllRewards = rewardList;
-            userForm.user = (User)ctlUserGrid.SelectedCells[0].OwningRow.DataBoundItem;
-            if (userForm.ShowDialog() == DialogResult.OK) { }
+            if (ctlUserGrid.SelectedCells.Count != 0)
+            {
+                userForm.user = (User)ctlUserGrid.SelectedCells[0].OwningRow.DataBoundItem;
+                if (userForm.ShowDialog() == DialogResult.OK)
+                {
+                    ctlUserGrid.Refresh();
+                }
+            }
+            else
+            {
+                MessageBox.Show($"Вы не выбрали пользователя для редактирования.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void DeleteUser()
         {
-            User user = (User)ctlUserGrid.SelectedCells[0].OwningRow.DataBoundItem;
-
-            if (MessageBox.Show($"Вы действительно хотите удалить пользователя {user.FirstName} {user.LastName}?", "Подтверждение",
-                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (ctlUserGrid.SelectedCells.Count != 0)
             {
-                userList.Remove(user);
+                User user = (User)ctlUserGrid.SelectedCells[0].OwningRow.DataBoundItem;
+
+                if (MessageBox.Show($"Вы действительно хотите удалить пользователя {user.FirstName} {user.LastName}?", "Подтверждение",
+                                     MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    userList.Remove(user);
+                }
+            }
+            else
+            {
+                MessageBox.Show($"Вы не выбрали пользователя для удаления.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
         private void AddReward()
         {
             var rewardForm = new RewardForm();
-            rewardForm.createNewReward = false;
-            rewardForm.maxID = rewardList.Max(u => u.ID);
+            rewardForm.createNewReward = true;
+            rewardForm.maxID = rewardList.Count == 0 ? 0 : rewardList.Max(u => u.ID);
             if (rewardForm.ShowDialog() == DialogResult.OK)
             {
                 rewardList.Add(rewardForm.reward);
@@ -239,19 +268,40 @@ namespace Task1
         private void EditReward()
         {
             var rewardForm = new RewardForm();
-            rewardForm.createNewReward = true;
-            rewardForm.reward = (Reward)ctlRewardGrid.SelectedCells[0].OwningRow.DataBoundItem;
-            if (rewardForm.ShowDialog() == DialogResult.OK) { }
+            rewardForm.createNewReward = false;
+            if (ctlRewardGrid.SelectedCells.Count != 0)
+            {
+                rewardForm.reward = (Reward)ctlRewardGrid.SelectedCells[0].OwningRow.DataBoundItem;
+                if (rewardForm.ShowDialog() == DialogResult.OK) { }
+            }
+            else
+            {
+                MessageBox.Show($"Вы не выбрали награду для редактирования.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void DeleteReward()
         {
-            Reward reward = (Reward)ctlRewardGrid.SelectedCells[0].OwningRow.DataBoundItem;
-
-            if (MessageBox.Show($"Вы действительно хотите удалить награду {reward.Title}?", "Подтверждение",
-                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (ctlRewardGrid.SelectedCells.Count != 0)
             {
-                rewardList.Remove(reward);
+                Reward reward = (Reward)ctlRewardGrid.SelectedCells[0].OwningRow.DataBoundItem;
+                if (MessageBox.Show($"Вы действительно хотите удалить награду {reward.Title}?", "Подтверждение",
+                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    // Удаление выбранной награды у пользователей (у которых она есть)
+                    foreach (var user in userList)
+                    {
+                        if (user.RewardsList.Count != 0)
+                        {
+                            var a = user.RewardsList.RemoveAll(r => r.ID == reward.ID);
+                        }
+                    }
+                    rewardList.Remove(reward);
+                }
+            }
+            else
+            {
+                MessageBox.Show($"Вы не выбрали награду для удаления.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

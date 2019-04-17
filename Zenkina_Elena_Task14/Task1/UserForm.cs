@@ -27,6 +27,8 @@ namespace Task1
             if (createNewUser)
             {
                 Text = "Новый пользователь";
+                // Список всех доступных наград
+                cbxAddReward.Items.AddRange(listAllRewards.Select(r => r.Title).ToArray());
             }
             else
             {
@@ -35,34 +37,20 @@ namespace Task1
                 tbxUserLastName.Text = user.LastName;
                 dtBirthDate.Value = user.Birthdate;
                 tbxUserAge.Text = user.Age.ToString();
-                if (user.RewardsList.Count != 0)
+
+                // Список наград пользователя
+                lbxRewardList.DataSource = user.RewardsList;
+                lbxRewardList.DisplayMember = "Title";
+                lbxRewardList.ValueMember = "Id";
+
+                // Список наград, которых нет у пользователя
+                foreach (var reward in listAllRewards)
                 {
-                    foreach (var reward in user.RewardsList)
+                    if (user.RewardsList.Where(r => r.ID == reward.ID).Count() == 0)
                     {
-                        lbxRewardList.Items.Add(reward.Title);
+                        cbxAddReward.Items.Add(reward.Title);
                     }
                 }
-
-                bool a = listAllRewards.SequenceEqual(user.RewardsList);
-                if (listAllRewards.Count > user.RewardsList.Count)
-                {
-
-
-                    /*foreach (var item in list1)
-                    {
-                        if (list2.Where(c => c.vopros == item.vopros).Count() == 0)
-                        {
-                            list3.Add(item);
-                        }
-                    }*/
-
-
-
-                    //if ()
-                    bool b = listAllRewards.SequenceEqual(user.RewardsList);
-                }
-                //cbxAddReward.Items.Add();
-                //lbxRewardList.DataSource = user.RewardsList.ToList();
             }
         }
 
@@ -74,12 +62,14 @@ namespace Task1
                 if (createNewUser)
                 {
                     user = new User(maxID + 1, tbxUserFirstName.Text, tbxUserLastName.Text, dtBirthDate.Value);
+                    RewardUser();
                 }
                 else
                 {
                     user.FirstName = tbxUserFirstName.Text;
                     user.LastName = tbxUserLastName.Text;
                     user.Birthdate = dtBirthDate.Value;
+                    RewardUser();
                 }
                 DialogResult = DialogResult.OK;
             }
@@ -114,6 +104,16 @@ namespace Task1
         private void btnCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
+        }
+
+        private void RewardUser()
+        {
+            var newReward = cbxAddReward.SelectedItem;
+            if (newReward != null)
+            {
+                user.RewardsList.Add(listAllRewards.First(r => r.Title == newReward.ToString()));
+            }
+            //var b = newReward ?? user.RewardsList.Find(r => r.Title == newReward.ToString());
         }
 
     }

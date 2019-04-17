@@ -79,7 +79,6 @@ namespace Task1
                 }
                 return str.Remove(str.Length - 2);
             }
-            //private set { }
         }
 
         public User(int id, string firstName, string lastName, DateTime birthday)
@@ -96,7 +95,7 @@ namespace Task1
             this.listRewards = listReward;
         }
 
-        public void AddReward(Reward reward)
+        /*public void AddReward(Reward reward)
         {
             RewardsList.Add(reward);
         }
@@ -104,7 +103,7 @@ namespace Task1
         public void RemoveReward(Reward reward)
         {
             RewardsList.Remove(reward);
-        }
+        }*/
 
         /// <summary>
         /// Проверка корректности строки
