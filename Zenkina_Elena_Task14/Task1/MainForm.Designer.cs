@@ -44,23 +44,23 @@
             this.ctlTabPanel = new System.Windows.Forms.TabControl();
             this.tpUsers = new System.Windows.Forms.TabPage();
             this.ctlUserGrid = new System.Windows.Forms.DataGridView();
-            this.tpRewards = new System.Windows.Forms.TabPage();
-            this.ctlRewardGrid = new System.Windows.Forms.DataGridView();
             this.contextUserMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.contextAddUser = new System.Windows.Forms.ToolStripMenuItem();
             this.contextEditUser = new System.Windows.Forms.ToolStripMenuItem();
             this.contextDeleteUser = new System.Windows.Forms.ToolStripMenuItem();
+            this.tpRewards = new System.Windows.Forms.TabPage();
+            this.ctlRewardGrid = new System.Windows.Forms.DataGridView();
             this.contextRewardMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.contextAddReward = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextEditReward = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextDeleteReward = new System.Windows.Forms.ToolStripMenuItem();
+            this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu.SuspendLayout();
             this.ctlTabPanel.SuspendLayout();
             this.tpUsers.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ctlUserGrid)).BeginInit();
+            this.contextUserMenu.SuspendLayout();
             this.tpRewards.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ctlRewardGrid)).BeginInit();
-            this.contextUserMenu.SuspendLayout();
             this.contextRewardMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -86,7 +86,7 @@
             // tsmiExit
             // 
             this.tsmiExit.Name = "tsmiExit";
-            this.tsmiExit.Size = new System.Drawing.Size(152, 22);
+            this.tsmiExit.Size = new System.Drawing.Size(108, 22);
             this.tsmiExit.Text = "Выход";
             this.tsmiExit.Click += new System.EventHandler(this.tsmiExit_Click);
             // 
@@ -195,28 +195,6 @@
             this.ctlUserGrid.TabIndex = 0;
             this.ctlUserGrid.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ctlUserGrid_ColumnHeaderMouseClick);
             // 
-            // tpRewards
-            // 
-            this.tpRewards.Controls.Add(this.ctlRewardGrid);
-            this.tpRewards.Location = new System.Drawing.Point(4, 22);
-            this.tpRewards.Name = "tpRewards";
-            this.tpRewards.Padding = new System.Windows.Forms.Padding(3);
-            this.tpRewards.Size = new System.Drawing.Size(984, 352);
-            this.tpRewards.TabIndex = 1;
-            this.tpRewards.Text = "Награды";
-            this.tpRewards.UseVisualStyleBackColor = true;
-            // 
-            // ctlRewardGrid
-            // 
-            this.ctlRewardGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ctlRewardGrid.ContextMenuStrip = this.contextRewardMenu;
-            this.ctlRewardGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctlRewardGrid.Location = new System.Drawing.Point(3, 3);
-            this.ctlRewardGrid.Name = "ctlRewardGrid";
-            this.ctlRewardGrid.Size = new System.Drawing.Size(978, 346);
-            this.ctlRewardGrid.TabIndex = 0;
-            this.ctlRewardGrid.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ctlUserGrid_ColumnHeaderMouseClick);
-            // 
             // contextUserMenu
             // 
             this.contextUserMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -247,36 +225,57 @@
             this.contextDeleteUser.Text = "Удалить...";
             this.contextDeleteUser.Click += new System.EventHandler(this.tsmiDeleteUser_Click);
             // 
+            // tpRewards
+            // 
+            this.tpRewards.Controls.Add(this.ctlRewardGrid);
+            this.tpRewards.Location = new System.Drawing.Point(4, 22);
+            this.tpRewards.Name = "tpRewards";
+            this.tpRewards.Padding = new System.Windows.Forms.Padding(3);
+            this.tpRewards.Size = new System.Drawing.Size(984, 352);
+            this.tpRewards.TabIndex = 1;
+            this.tpRewards.Text = "Награды";
+            this.tpRewards.UseVisualStyleBackColor = true;
+            // 
+            // ctlRewardGrid
+            // 
+            this.ctlRewardGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.ctlRewardGrid.ContextMenuStrip = this.contextRewardMenu;
+            this.ctlRewardGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctlRewardGrid.Location = new System.Drawing.Point(3, 3);
+            this.ctlRewardGrid.Name = "ctlRewardGrid";
+            this.ctlRewardGrid.Size = new System.Drawing.Size(978, 346);
+            this.ctlRewardGrid.TabIndex = 0;
+            this.ctlRewardGrid.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ctlUserGrid_ColumnHeaderMouseClick);
+            // 
             // contextRewardMenu
             // 
             this.contextRewardMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.contextAddReward,
-            this.contextEditReward,
-            this.contextDeleteReward});
+            this.addToolStripMenuItem,
+            this.editToolStripMenuItem,
+            this.deleteToolStripMenuItem});
             this.contextRewardMenu.Name = "contextRewardMenu";
-            this.contextRewardMenu.Size = new System.Drawing.Size(164, 70);
-            this.contextRewardMenu.Click += new System.EventHandler(this.tsmiAddReward_Click);
+            this.contextRewardMenu.Size = new System.Drawing.Size(164, 92);
             // 
-            // contextAddReward
+            // addToolStripMenuItem
             // 
-            this.contextAddReward.Name = "contextAddReward";
-            this.contextAddReward.Size = new System.Drawing.Size(163, 22);
-            this.contextAddReward.Text = "Добавить...";
-            this.contextAddReward.Click += new System.EventHandler(this.tsmiAddReward_Click);
+            this.addToolStripMenuItem.Name = "addToolStripMenuItem";
+            this.addToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.addToolStripMenuItem.Text = "Добавить...";
+            this.addToolStripMenuItem.Click += new System.EventHandler(this.tsmiAddReward_Click);
             // 
-            // contextEditReward
+            // editToolStripMenuItem
             // 
-            this.contextEditReward.Name = "contextEditReward";
-            this.contextEditReward.Size = new System.Drawing.Size(163, 22);
-            this.contextEditReward.Text = "Редактировать...";
-            this.contextEditReward.Click += new System.EventHandler(this.tsmiEditReward_Click);
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.editToolStripMenuItem.Text = "Редактировать...";
+            this.editToolStripMenuItem.Click += new System.EventHandler(this.tsmiEditReward_Click);
             // 
-            // contextDeleteReward
+            // deleteToolStripMenuItem
             // 
-            this.contextDeleteReward.Name = "contextDeleteReward";
-            this.contextDeleteReward.Size = new System.Drawing.Size(163, 22);
-            this.contextDeleteReward.Text = "Удалить...";
-            this.contextDeleteReward.Click += new System.EventHandler(this.tsmiDeleteReward_Click);
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.deleteToolStripMenuItem.Text = "Удалить...";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.tsmiDeleteReward_Click);
             // 
             // MainForm
             // 
@@ -296,9 +295,9 @@
             this.ctlTabPanel.ResumeLayout(false);
             this.tpUsers.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.ctlUserGrid)).EndInit();
+            this.contextUserMenu.ResumeLayout(false);
             this.tpRewards.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.ctlRewardGrid)).EndInit();
-            this.contextUserMenu.ResumeLayout(false);
             this.contextRewardMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -326,12 +325,12 @@
         private System.Windows.Forms.ToolStripMenuItem contextAddUser;
         private System.Windows.Forms.ToolStripMenuItem contextEditUser;
         private System.Windows.Forms.ToolStripMenuItem contextDeleteUser;
-        private System.Windows.Forms.ContextMenuStrip contextRewardMenu;
-        private System.Windows.Forms.ToolStripMenuItem contextAddReward;
-        private System.Windows.Forms.ToolStripMenuItem contextEditReward;
-        private System.Windows.Forms.ToolStripMenuItem contextDeleteReward;
         private System.Windows.Forms.DataGridView ctlUserGrid;
         private System.Windows.Forms.DataGridView ctlRewardGrid;
+        private System.Windows.Forms.ContextMenuStrip contextRewardMenu;
+        private System.Windows.Forms.ToolStripMenuItem addToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
     }
 }
 

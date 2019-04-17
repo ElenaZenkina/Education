@@ -106,8 +106,10 @@
             this.Controls.Add(this.tbxTitle);
             this.Controls.Add(this.lblDescription);
             this.Controls.Add(this.lblTitle);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "RewardForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "RewardForm";
             this.Load += new System.EventHandler(this.RewardForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.ctlErrorProvider)).EndInit();
