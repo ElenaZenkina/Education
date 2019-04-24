@@ -12,14 +12,29 @@ namespace Task1
 {
     public partial class UserForm : Form
     {
-        public bool createNewUser = true;
-        public BindingList<Reward> listAllRewards;
-        public User user;
-        public int maxID;
+        private readonly bool createNewUser = true;
+
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public DateTime Birthdate { get; set; }
+        public int Age { get; set; }
+        public List<Reward> RewardsList { get; set; }
+        public List<Reward> listAllRewards;
 
         public UserForm()
         {
             InitializeComponent();
+        }
+
+        public UserForm(User user):this()
+        {
+            FirstName = user.FirstName;
+            LastName = user.LastName;
+            Birthdate = user.Birthdate;
+            Age = user.Age;
+            RewardsList = user.RewardsList;
+
+            createNewUser = false;
         }
 
         private void UserForm_Load(object sender, EventArgs e)
@@ -27,28 +42,24 @@ namespace Task1
             if (createNewUser)
             {
                 Text = "Новый пользователь";
-                // Список всех доступных наград
-                cbxAddReward.Items.AddRange(listAllRewards.Select(r => r.Title).ToArray());
+                // Список всех наград (их наименования)
+                clbxReward.Items.AddRange(listAllRewards.Select(r => r.Title).ToArray());
             }
             else
             {
                 Text = "Редактирование данных о пользователе";
-                tbxUserFirstName.Text = user.FirstName;
-                tbxUserLastName.Text = user.LastName;
-                dtBirthDate.Value = user.Birthdate;
-                tbxUserAge.Text = user.Age.ToString();
+                tbxUserFirstName.Text = FirstName;
+                tbxUserLastName.Text = LastName;
+                dtBirthDate.Value = Birthdate;
+                tbxUserAge.Text = Age.ToString();
 
-                // Список наград пользователя
-                lbxRewardList.DataSource = user.RewardsList;
-                lbxRewardList.DisplayMember = "Title";
-                lbxRewardList.ValueMember = "Id";
-
-                // Список наград, которых нет у пользователя
-                foreach (var reward in listAllRewards)
+                // Список всех наград. Награды пользователя помечены "галочкой"
+                for (int i = 0; i < listAllRewards.Count; i++)
                 {
-                    if (user.RewardsList.Where(r => r.ID == reward.ID).Count() == 0)
+                    clbxReward.Items.Add(listAllRewards[i].Title);
+                    if (RewardsList.Where(r => r.ID == listAllRewards[i].ID).Count() != 0)
                     {
-                        cbxAddReward.Items.Add(reward.Title);
+                        clbxReward.SetItemChecked(i, true);
                     }
                 }
             }
@@ -57,48 +68,15 @@ namespace Task1
         private void btnOK_Click(object sender, EventArgs e)
         {
             ctlErrorProvider.Clear();
-            try
+            if (ValidateChildren())
             {
-                if (createNewUser)
-                {
-                    user = new User(maxID + 1, tbxUserFirstName.Text, tbxUserLastName.Text, dtBirthDate.Value);
-                    RewardUser();
-                }
-                else
-                {
-                    user.FirstName = tbxUserFirstName.Text;
-                    user.LastName = tbxUserLastName.Text;
-                    user.Birthdate = dtBirthDate.Value;
-                    RewardUser();
-                }
-                DialogResult = DialogResult.OK;
-            }
-            catch (ArgumentOutOfRangeException error)
-            {
-                switch (error.ParamName)
-                {
-                    case "FirstName":
-                        ctlErrorProvider.SetError(tbxUserFirstName, error.Message);
-                        break;
-                    case "LastName":
-                        ctlErrorProvider.SetError(tbxUserLastName, error.Message);
-                        break;
-                    case "Birthdate":
-                        ctlErrorProvider.SetError(dtBirthDate, error.Message);
-                        break;
-                    default:
-                        break;
-                }
-                DialogResult = DialogResult.None;
-            }
-            /*if (this.ValidateChildren())
-            {
+                RewardUser();
                 DialogResult = DialogResult.OK;
             }
             else
             {
                 DialogResult = DialogResult.None;
-            }*/
+            }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -108,13 +86,54 @@ namespace Task1
 
         private void RewardUser()
         {
-            var newReward = cbxAddReward.SelectedItem;
-            if (newReward != null)
+            RewardsList = new List<Reward>();
+            foreach (var newReward in clbxReward.CheckedItems)
             {
-                user.RewardsList.Add(listAllRewards.First(r => r.Title == newReward.ToString()));
+                RewardsList.Add(listAllRewards.First(r => r.Title == newReward.ToString()));
             }
-            //var b = newReward ?? user.RewardsList.Find(r => r.Title == newReward.ToString());
         }
 
+        private void tbxUserFirstName_Validating(object sender, CancelEventArgs e)
+        {
+            string name = (sender as TextBox).Text.Trim();
+
+            if (name.Length == 0 || name.Length > 50)
+            {
+                ctlErrorProvider.SetError((sender as TextBox), "Значение должно содержать от 1 до 50 символов.");
+                e.Cancel = true;
+            }
+            else
+            {
+                e.Cancel = false;
+            }
+        }
+
+        private void tbxUserFirstName_Validated(object sender, EventArgs e)
+        {
+            FirstName = tbxUserFirstName.Text.Trim();
+        }
+
+        private void tbxUserLastName_Validated(object sender, EventArgs e)
+        {
+            LastName = tbxUserLastName.Text.Trim();
+        }
+
+        private void dtBirthDate_Validating(object sender, CancelEventArgs e)
+        {
+            if (DateTime.Now.AddYears(-150) > dtBirthDate.Value || dtBirthDate.Value > DateTime.Now)
+            {
+                ctlErrorProvider.SetError((sender as DateTimePicker), $"Дата рождения должна быть в диапазоне от {DateTime.Now.AddYears(-150)} до {DateTime.Now}.");
+                e.Cancel = true;
+            }
+            else
+            {
+                e.Cancel = false;
+            }
+        }
+
+        private void dtBirthDate_Validated(object sender, EventArgs e)
+        {
+            Birthdate = dtBirthDate.Value;
+        }
     }
 }

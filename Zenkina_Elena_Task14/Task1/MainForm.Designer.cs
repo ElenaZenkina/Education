@@ -194,6 +194,7 @@
             this.ctlUserGrid.Size = new System.Drawing.Size(978, 346);
             this.ctlUserGrid.TabIndex = 0;
             this.ctlUserGrid.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ctlUserGrid_ColumnHeaderMouseClick);
+            this.ctlUserGrid.DoubleClick += new System.EventHandler(this.ctlUserGrid_DoubleClick);
             // 
             // contextUserMenu
             // 
@@ -246,6 +247,7 @@
             this.ctlRewardGrid.Size = new System.Drawing.Size(978, 346);
             this.ctlRewardGrid.TabIndex = 0;
             this.ctlRewardGrid.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ctlUserGrid_ColumnHeaderMouseClick);
+            this.ctlRewardGrid.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ctlRewardGrid_MouseDoubleClick);
             // 
             // contextRewardMenu
             // 
@@ -254,7 +256,7 @@
             this.editToolStripMenuItem,
             this.deleteToolStripMenuItem});
             this.contextRewardMenu.Name = "contextRewardMenu";
-            this.contextRewardMenu.Size = new System.Drawing.Size(164, 92);
+            this.contextRewardMenu.Size = new System.Drawing.Size(164, 70);
             // 
             // addToolStripMenuItem
             // 

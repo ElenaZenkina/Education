@@ -41,9 +41,7 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.ctlErrorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.lblRewardList = new System.Windows.Forms.Label();
-            this.lbxRewardList = new System.Windows.Forms.ListBox();
-            this.lblAddReward = new System.Windows.Forms.Label();
-            this.cbxAddReward = new System.Windows.Forms.ComboBox();
+            this.clbxReward = new System.Windows.Forms.CheckedListBox();
             ((System.ComponentModel.ISupportInitialize)(this.ctlErrorProvider)).BeginInit();
             this.SuspendLayout();
             // 
@@ -62,6 +60,8 @@
             this.tbxUserFirstName.Name = "tbxUserFirstName";
             this.tbxUserFirstName.Size = new System.Drawing.Size(128, 20);
             this.tbxUserFirstName.TabIndex = 1;
+            this.tbxUserFirstName.Validating += new System.ComponentModel.CancelEventHandler(this.tbxUserFirstName_Validating);
+            this.tbxUserFirstName.Validated += new System.EventHandler(this.tbxUserFirstName_Validated);
             // 
             // tbxUserLastName
             // 
@@ -69,6 +69,8 @@
             this.tbxUserLastName.Name = "tbxUserLastName";
             this.tbxUserLastName.Size = new System.Drawing.Size(128, 20);
             this.tbxUserLastName.TabIndex = 3;
+            this.tbxUserLastName.Validating += new System.ComponentModel.CancelEventHandler(this.tbxUserFirstName_Validating);
+            this.tbxUserLastName.Validated += new System.EventHandler(this.tbxUserLastName_Validated);
             // 
             // lblUserLastName
             // 
@@ -111,10 +113,12 @@
             this.dtBirthDate.Name = "dtBirthDate";
             this.dtBirthDate.Size = new System.Drawing.Size(128, 20);
             this.dtBirthDate.TabIndex = 8;
+            this.dtBirthDate.Validating += new System.ComponentModel.CancelEventHandler(this.dtBirthDate_Validating);
+            this.dtBirthDate.Validated += new System.EventHandler(this.dtBirthDate_Validated);
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(191, 385);
+            this.btnCancel.Location = new System.Drawing.Point(191, 377);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 10;
@@ -124,7 +128,7 @@
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(54, 385);
+            this.btnOK.Location = new System.Drawing.Point(54, 377);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 11;
@@ -139,46 +143,26 @@
             // lblRewardList
             // 
             this.lblRewardList.AutoSize = true;
-            this.lblRewardList.Location = new System.Drawing.Point(24, 214);
+            this.lblRewardList.Location = new System.Drawing.Point(24, 216);
             this.lblRewardList.Name = "lblRewardList";
             this.lblRewardList.Size = new System.Drawing.Size(82, 13);
             this.lblRewardList.TabIndex = 12;
             this.lblRewardList.Text = "Список наград";
             // 
-            // lbxRewardList
+            // clbxReward
             // 
-            this.lbxRewardList.FormattingEnabled = true;
-            this.lbxRewardList.Location = new System.Drawing.Point(121, 214);
-            this.lbxRewardList.Name = "lbxRewardList";
-            this.lbxRewardList.Size = new System.Drawing.Size(128, 69);
-            this.lbxRewardList.TabIndex = 13;
-            // 
-            // lblAddReward
-            // 
-            this.lblAddReward.AutoSize = true;
-            this.lblAddReward.Location = new System.Drawing.Point(6, 297);
-            this.lblAddReward.Name = "lblAddReward";
-            this.lblAddReward.Size = new System.Drawing.Size(100, 13);
-            this.lblAddReward.TabIndex = 14;
-            this.lblAddReward.Text = "Добавить награду";
-            // 
-            // cbxAddReward
-            // 
-            this.cbxAddReward.FormattingEnabled = true;
-            this.cbxAddReward.Location = new System.Drawing.Point(121, 297);
-            this.cbxAddReward.Name = "cbxAddReward";
-            this.cbxAddReward.Size = new System.Drawing.Size(128, 21);
-            this.cbxAddReward.Sorted = true;
-            this.cbxAddReward.TabIndex = 15;
+            this.clbxReward.FormattingEnabled = true;
+            this.clbxReward.Location = new System.Drawing.Point(50, 243);
+            this.clbxReward.Name = "clbxReward";
+            this.clbxReward.Size = new System.Drawing.Size(199, 94);
+            this.clbxReward.TabIndex = 16;
             // 
             // UserForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(352, 448);
-            this.Controls.Add(this.cbxAddReward);
-            this.Controls.Add(this.lblAddReward);
-            this.Controls.Add(this.lbxRewardList);
+            this.ClientSize = new System.Drawing.Size(324, 448);
+            this.Controls.Add(this.clbxReward);
             this.Controls.Add(this.lblRewardList);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.btnCancel);
@@ -215,9 +199,7 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.ErrorProvider ctlErrorProvider;
-        private System.Windows.Forms.ComboBox cbxAddReward;
-        private System.Windows.Forms.Label lblAddReward;
-        private System.Windows.Forms.ListBox lbxRewardList;
         private System.Windows.Forms.Label lblRewardList;
+        private System.Windows.Forms.CheckedListBox clbxReward;
     }
 }

@@ -23,7 +23,7 @@ namespace Task1
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException("Title", value, $"Наименование должно содержать от 1 до 50 символов.");
+                    throw new ArgumentOutOfRangeException(nameof(Title), value, $"Наименование должно содержать от 1 до 50 символов.");
                 }
             }
         }
@@ -38,7 +38,7 @@ namespace Task1
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException("Description", value, $"Описание должно содержать не более 250 символов.");
+                    throw new ArgumentOutOfRangeException(nameof(Description), value, $"Описание должно содержать не более 250 символов.");
                 }
             }
         }

@@ -63,6 +63,8 @@
             this.tbxTitle.Name = "tbxTitle";
             this.tbxTitle.Size = new System.Drawing.Size(100, 20);
             this.tbxTitle.TabIndex = 2;
+            this.tbxTitle.Validating += new System.ComponentModel.CancelEventHandler(this.tbxTitle_Validating);
+            this.tbxTitle.Validated += new System.EventHandler(this.tbxTitle_Validated);
             // 
             // tbxDescription
             // 
@@ -70,6 +72,8 @@
             this.tbxDescription.Name = "tbxDescription";
             this.tbxDescription.Size = new System.Drawing.Size(100, 20);
             this.tbxDescription.TabIndex = 3;
+            this.tbxDescription.Validating += new System.ComponentModel.CancelEventHandler(this.tbxDescription_Validating);
+            this.tbxDescription.Validated += new System.EventHandler(this.tbxDescription_Validated);
             // 
             // btnOK
             // 

@@ -28,11 +28,19 @@ namespace Task1
             userList.Add(new User(4, "Павел", "Васильев", new DateTime(2003, 11, 1), new List<Reward> { new Reward(1, "Нобелевская премия"), new Reward(2, "Шнобелевская премия") }));
             userList.Add(new User(5, "Иван", "Павлов", new DateTime(2004, 1, 12), new List<Reward> { new Reward(1, "Нобелевская премия"), new Reward(2, "Шнобелевская премия"), new Reward(3, "премия Дарвина") }));
             ctlUserGrid.DataSource = userList;
+            ctlUserGrid.Columns[1].HeaderText = "Имя";
+            ctlUserGrid.Columns[2].HeaderText = "Фамилия";
+            ctlUserGrid.Columns[3].HeaderText = "Дата рождения";
+            ctlUserGrid.Columns[4].HeaderText = "Возраст";
+            ctlUserGrid.Columns[5].HeaderText = "Список наград";
 
             rewardList.Add(new Reward(1, "Нобелевская премия"));
             rewardList.Add(new Reward(2, "Шнобелевская премия", "Полностью бесполезная фигня"));
             rewardList.Add(new Reward(3, "премия Дарвина"));
             ctlRewardGrid.DataSource = rewardList;
+            ctlRewardGrid.Columns[1].HeaderText = "Наименование";
+            ctlRewardGrid.Columns[2].HeaderText = "Описание";
+            
         }
 
         private void tsmiExit_Click(object sender, EventArgs e)
@@ -204,30 +212,41 @@ namespace Task1
             DeleteReward();
         }
 
+        private void ctlUserGrid_DoubleClick(object sender, EventArgs e)
+        {
+            EditUser();
+        }
+
+        private void ctlRewardGrid_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            EditReward();
+        }
+
 
         private void AddUser()
         {
             var userForm = new UserForm();
-            userForm.createNewUser = true;
-            userForm.listAllRewards = rewardList;
-            userForm.maxID = userList.Count == 0 ? 0 : userList.Max(u => u.ID);
+            userForm.listAllRewards = rewardList.ToList();
             if (userForm.ShowDialog() == DialogResult.OK)
             {
-                userList.Add(userForm.user);
+                var user = new User(userList.Count == 0 ? 0 : userList.Max(u => u.ID) + 1, userForm.FirstName, userForm.LastName, userForm.Birthdate, userForm.RewardsList);
+                userList.Add(user);
             }
         }
 
         private void EditUser()
         {
-            var userForm = new UserForm();
-            userForm.createNewUser = false;
-            userForm.listAllRewards = rewardList;
             if (ctlUserGrid.SelectedCells.Count != 0)
             {
-                userForm.user = (User)ctlUserGrid.SelectedCells[0].OwningRow.DataBoundItem;
+                var user = userList.First(u => u.ID == SelectedEntityID(ctlUserGrid));
+                var userForm = new UserForm(user);
+                userForm.listAllRewards = rewardList.ToList();
                 if (userForm.ShowDialog() == DialogResult.OK)
                 {
-                    ctlUserGrid.Refresh();
+                    user.FirstName = userForm.FirstName;
+                    user.LastName = userForm.LastName;
+                    user.Birthdate = userForm.Birthdate;
+                    user.RewardsList = userForm.RewardsList;
                 }
             }
             else
@@ -240,7 +259,7 @@ namespace Task1
         {
             if (ctlUserGrid.SelectedCells.Count != 0)
             {
-                User user = (User)ctlUserGrid.SelectedCells[0].OwningRow.DataBoundItem;
+                User user = userList.First(u => u.ID == SelectedEntityID(ctlUserGrid));
 
                 if (MessageBox.Show($"Вы действительно хотите удалить пользователя {user.FirstName} {user.LastName}?", "Подтверждение",
                                      MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -257,22 +276,24 @@ namespace Task1
         private void AddReward()
         {
             var rewardForm = new RewardForm();
-            rewardForm.createNewReward = true;
-            rewardForm.maxID = rewardList.Count == 0 ? 0 : rewardList.Max(u => u.ID);
             if (rewardForm.ShowDialog() == DialogResult.OK)
             {
-                rewardList.Add(rewardForm.reward);
+                var reward = new Reward(rewardList.Count == 0 ? 0 : rewardList.Max(u => u.ID) + 1, rewardForm.Title, rewardForm.Description);
+                rewardList.Add(reward);
             }
         }
 
         private void EditReward()
         {
-            var rewardForm = new RewardForm();
-            rewardForm.createNewReward = false;
             if (ctlRewardGrid.SelectedCells.Count != 0)
             {
-                rewardForm.reward = (Reward)ctlRewardGrid.SelectedCells[0].OwningRow.DataBoundItem;
-                if (rewardForm.ShowDialog() == DialogResult.OK) { }
+                var reward = rewardList.First(r => r.ID == SelectedEntityID(ctlRewardGrid));
+                var rewardForm = new RewardForm(reward);
+                if (rewardForm.ShowDialog() == DialogResult.OK)
+                {
+                    reward.Title = rewardForm.Title;
+                    reward.Description = rewardForm.Description;
+                }
             }
             else
             {
@@ -284,7 +305,7 @@ namespace Task1
         {
             if (ctlRewardGrid.SelectedCells.Count != 0)
             {
-                Reward reward = (Reward)ctlRewardGrid.SelectedCells[0].OwningRow.DataBoundItem;
+                Reward reward = rewardList.First(r => r.ID == SelectedEntityID(ctlRewardGrid));
                 if (MessageBox.Show($"Вы действительно хотите удалить награду {reward.Title}?", "Подтверждение",
                                  MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
@@ -293,7 +314,7 @@ namespace Task1
                     {
                         if (user.RewardsList.Count != 0)
                         {
-                            var a = user.RewardsList.RemoveAll(r => r.ID == reward.ID);
+                            user.RewardsList.RemoveAll(r => r.ID == reward.ID);
                         }
                     }
                     rewardList.Remove(reward);
@@ -305,5 +326,11 @@ namespace Task1
             }
         }
 
+        // Возвращает ID (значение из первого поля) выбранной строки
+        private int SelectedEntityID(DataGridView grid)
+        {
+            var rowIndex = grid.SelectedCells[0].RowIndex;
+            return (int)grid.Rows[rowIndex].Cells[0].Value;
+        }
     }
 }
